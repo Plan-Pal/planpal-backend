@@ -1,9 +1,8 @@
 package com.planpal.demo.service.user;
 
 import com.planpal.demo.service.feign.KakaoTokenClient;
-import com.planpal.demo.web.dto.kakao.KakaoInfo;
-import com.planpal.demo.web.dto.kakao.KakaoTokenRequest;
-import com.planpal.demo.web.dto.kakao.KakaoTokenResponse;
+import com.planpal.demo.service.feign.KakaoUserInfoClient;
+import com.planpal.demo.web.dto.kakao.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,19 +11,25 @@ import org.springframework.stereotype.Service;
 public class SocialLoginService{
 
     private final KakaoTokenClient kakaoTokenClient;
+    private final KakaoUserInfoClient kakaoUserInfoClient;
     private final KakaoInfo kakaoInfo;
 
-    public String getUserTokenFromCode(String code){
-        System.out.println("code = " + code);
+    public KakaoUserInfoDto getUserInfoFromCode(String code){
         String kakaoToken=getTokenFromCode(code);
-        System.out.println("kakaoToken = " + kakaoToken);
-        return kakaoToken;
+        return getUserInfoFromToken(kakaoToken);
     }
 
     private String getTokenFromCode(String code){
         KakaoTokenResponse token = kakaoTokenClient.getToken(
                 KakaoTokenRequest.newInstance(kakaoInfo, code).toString());
-
         return token.getAccess_token();
+    }
+
+    private KakaoUserInfoDto getUserInfoFromToken(String token){
+        KakaoUserInfoResponse userinfo=kakaoUserInfoClient.getUserInfo(token);
+        return KakaoUserInfoDto.builder()
+                .id(userinfo.getId())
+                .nickname(userinfo.getProperties().getNickname())
+                .build();
     }
 }
