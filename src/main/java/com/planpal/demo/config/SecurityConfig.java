@@ -1,5 +1,11 @@
 package com.planpal.demo.config;
 
+import com.planpal.demo.auth.bearer.BearerAuthEntryPoint;
+import com.planpal.demo.auth.bearer.BearerAuthFilter;
+import com.planpal.demo.auth.jwt.JwtProperties;
+import com.planpal.demo.auth.jwt.JwtUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,13 +13,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
+@EnableConfigurationProperties(JwtProperties.class)
 public class SecurityConfig {
+
+    private final JwtUtils jwtUtils;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -39,6 +50,9 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().permitAll())
+                .addFilterBefore(new BearerAuthFilter(jwtUtils), BasicAuthenticationFilter.class)
+                .exceptionHandling((exception) -> exception
+                        .authenticationEntryPoint(new BearerAuthEntryPoint()))
                 .build();
     }
 

@@ -1,7 +1,6 @@
 package com.planpal.demo.domain;
 
 import com.planpal.demo.domain.common.BaseEntity;
-import com.planpal.demo.domain.enums.SocialType;
 import com.planpal.demo.domain.enums.AlarmState;
 import com.planpal.demo.domain.enums.UserState;
 import jakarta.persistence.*;
@@ -22,22 +21,18 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private Long kakaoId;
+
     @Column(nullable = false, unique = true, length = 4)
     private String tagId;
 
-    @Column(nullable = false, unique = true, length = 10)
+    @Column(nullable = false, length = 10)
     private String nickname;
-
-    @Column(nullable = false, unique = true, length = 70)
-    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 5)
     private AlarmState alarmState;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
-    private SocialType socialType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
@@ -46,11 +41,10 @@ public class User extends BaseEntity {
     private LocalDate inactiveAt;
 
     @Builder
-    public User(String nickname, String email, SocialType socialType) {
-        this.tagId = generateRandomTagId();
+    public User(Long kakaoId, String nickname) {
+        this.kakaoId = kakaoId;
         this.nickname = nickname;
-        this.email = email;
-        this.socialType = socialType;
+        this.tagId = generateRandomTagId();
         this.alarmState = AlarmState.OFF;
         this.userState = UserState.ACTIVE;
     }

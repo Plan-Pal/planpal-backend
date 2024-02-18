@@ -16,6 +16,9 @@ public enum ErrorStatus {
 
     // USER
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER4001", "사용자 정보를 찾을 수 없습니다"),
+
+    // JWT
+    TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "JWT4001", "인증에 실패하였습니다")
     ;
 
     private final HttpStatus httpStatus;

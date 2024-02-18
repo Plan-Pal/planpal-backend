@@ -16,3 +16,6 @@ spring:
         default_batch_fetch_size: 1000
   jackson:
     property-naming-strategy: SNAKE_CASE
+jwt:
+  secret_key: temp
+  access_token_expires_in: 7200 # 2hours
