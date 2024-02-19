@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/planpal
+    url: jdbc:mysql://localhost:3306/planpal?createDatabaseIfNotExist=true
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -19,3 +19,9 @@ spring:
 jwt:
   secret_key: temp
   access_token_expires_in: 7200 # 2hours
+
+oauth2:
+  kakao:
+    baseUrl: https://kauth.kakao.com
+    clientId: 970e86a127d840a0fcaee7710b33c887
+    redirectUri: http://localhost:3000/callback
