@@ -1,8 +1,10 @@
 package com.planpal.demo.domain;
 
+import com.planpal.demo.domain.common.BaseEntity;
 import com.planpal.demo.domain.enums.ScheduleState;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Schedule {
+public class Schedule extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,11 +33,22 @@ public class Schedule {
     @Column(nullable = false, length = 40)
     private String place;
 
-    @Column(nullable = false)
+    @Column
     private int limited_number;
 
     @Column(nullable = false)
     private ScheduleState schedule_state;
+
+    @Builder
+    public Schedule(String short_title, String long_title, String memo, LocalDateTime appointed_time, String place, int limited_number, ScheduleState schedule_state){
+        this.short_title=short_title;
+        this.long_title=long_title;
+        this.memo=memo;
+        this.appointed_time=appointed_time;
+        this.place=place;
+        this.limited_number=limited_number;
+        this.schedule_state=schedule_state;
+    }
 }
 
 
