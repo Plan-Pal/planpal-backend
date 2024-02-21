@@ -2,7 +2,11 @@ package com.planpal.demo.converter;
 
 import com.planpal.demo.domain.Schedule;
 import com.planpal.demo.web.dto.schedule.AddScheduleRequest;
+import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
 import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
+import com.planpal.demo.web.dto.schedule.GetSimpleScheduleResponse;
+
+import java.util.List;
 
 public class ScheduleConverter {
     public static Schedule toSchedule(AddScheduleRequest request){
@@ -25,6 +29,22 @@ public class ScheduleConverter {
                 .appointed_time(schedule.getAppointed_time())
                 .place(schedule.getPlace())
                 .scheduleState(schedule.getSchedule_state())
+                .build();
+    }
+
+    public static GetSimpleScheduleResponse toSimpleSchedule(Schedule schedule){
+        return GetSimpleScheduleResponse.builder()
+                .title(schedule.getLong_title())
+                .appointed_time(schedule.getAppointed_time())
+                .place(schedule.getPlace())
+                .scheduleState(schedule.getSchedule_state())
+                .build();
+    }
+
+    public static GetAllScheduleListResponse toSimpleScheduleList(List<GetSimpleScheduleResponse> schedules){
+        return GetAllScheduleListResponse.builder()
+                .schedule_count(schedules.size())
+                .schedules(schedules)
                 .build();
     }
 }
