@@ -3,6 +3,7 @@ package com.planpal.demo.web.controller;
 import com.planpal.demo.apipayload.ApiResponse;
 import com.planpal.demo.apipayload.status.SuccessStatus;
 import com.planpal.demo.service.schedule.ScheduleService;
+import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
 import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,12 @@ public class ScheduleGetController {
     @GetMapping("/schedules/{scheduleId}")
     public ApiResponse<GetScheduleResponse> getSchedule(@PathVariable Long scheduleId){
         GetScheduleResponse response=scheduleService.getSchedule(scheduleId);
+        return ApiResponse.of(SuccessStatus._OK, response);
+    }
+
+    @GetMapping("/schedules")
+    public ApiResponse<GetAllScheduleListResponse> getAllSchedules(){
+        GetAllScheduleListResponse response=scheduleService.getAllSimpleScheduls();
         return ApiResponse.of(SuccessStatus._OK, response);
     }
 }
