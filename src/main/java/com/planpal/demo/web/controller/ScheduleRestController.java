@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class ScheduleController {
+public class ScheduleRestController {
     private final ScheduleService scheduleService;
 
     @ResponseStatus(HttpStatus.CREATED)
