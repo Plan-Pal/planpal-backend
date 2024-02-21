@@ -5,23 +5,28 @@ import com.planpal.demo.converter.ScheduleConverter;
 import com.planpal.demo.domain.Schedule;
 import com.planpal.demo.exception.ex.ScheduleException;
 import com.planpal.demo.repository.SchedulesRepository;
-import com.planpal.demo.web.dto.schedule.AddScheduleRequest;
-import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
-import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
-import com.planpal.demo.web.dto.schedule.GetSimpleScheduleResponse;
+import com.planpal.demo.web.dto.schedule.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ScheduleService {
     private final SchedulesRepository schedulesRepository;
 
     public void saveSchedule(AddScheduleRequest request){
         schedulesRepository.save(ScheduleConverter.toSchedule(request));
+    }
+
+    public void updateSchedule(Long scheduleId, UpdateScheduleRequest request){
+        Schedule findSchedule = schedulesRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleException(ErrorStatus.SCHEDULE_NOT_FOUND));
+        findSchedule.update(request);
     }
 
     public GetScheduleResponse getSchedule(Long scheduleId){
