@@ -2,6 +2,7 @@ package com.planpal.demo.domain;
 
 import com.planpal.demo.domain.common.BaseEntity;
 import com.planpal.demo.domain.enums.ScheduleState;
+import com.planpal.demo.web.dto.schedule.UpdateScheduleRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,6 +49,16 @@ public class Schedule extends BaseEntity {
         this.place=place;
         this.limited_number=limited_number;
         this.schedule_state=schedule_state;
+    }
+
+    public void update(UpdateScheduleRequest request){
+        this.short_title=request.getShort_title();
+        this.long_title= request.getLong_title();
+        this.memo=request.getMemo();
+        this.appointed_time=request.getAppointed_time();
+        this.place= request.getPlace();
+        this.limited_number=request.getLimited_number();
+        this.schedule_state=request.getSchedule_state();
     }
 }
 
