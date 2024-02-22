@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -41,14 +43,14 @@ public class Schedule extends BaseEntity {
     private ScheduleState scheduleState;
 
     @Builder
-    public Schedule(String shortTitle, String longTitle, String memo, LocalDateTime appointedTime, String place, int limitedNumber){
+    public Schedule(String shortTitle, String longTitle, String memo, LocalDateTime appointedTime, String place, int limitedNumber, ScheduleState scheduleState){
         this.shortTitle=shortTitle;
         this.longTitle=longTitle;
         this.memo=memo;
         this.appointedTime=appointedTime;
         this.place=place;
         this.limitedNumber=limitedNumber;
-        this.scheduleState=ScheduleState.PRIVATE;
+        this.scheduleState=scheduleState;
     }
 
     public void update(UpdateScheduleRequest request){
@@ -60,6 +62,12 @@ public class Schedule extends BaseEntity {
         this.limitedNumber=request.getLimitedNumber();
         this.scheduleState=request.getScheduleState();
     }
+
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<AddedSchedule> addedSchedules=new ArrayList<>();
+
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<InvitedSchedule> invitedSchedules=new ArrayList<>();
 }
 
 
