@@ -8,24 +8,24 @@ import java.time.LocalDateTime;
 
 @Getter
 public class GetScheduleResponse {
-    private final String short_title;
-    private final String long_title;
+    private final String shortTitle;
+    private final String longTitle;
     private final String memo;
-    private final LocalDateTime appointed_time;
+    private final LocalDateTime appointedTime;
     private final String place;
     private final ScheduleState scheduleState;
 
     @Builder
-    public GetScheduleResponse(String short_title,
-                               String long_title,
+    public GetScheduleResponse(String shortTitle,
+                               String longTitle,
                                String memo,
-                               LocalDateTime appointed_time,
+                               LocalDateTime appointedTime,
                                String place,
                                ScheduleState scheduleState){
-        this.short_title=short_title;
-        this.long_title=long_title;
+        this.shortTitle=shortTitle;
+        this.longTitle=longTitle;
         this.memo=memo;
-        this.appointed_time=appointed_time;
+        this.appointedTime=appointedTime;
         this.place=place;
         this.scheduleState=scheduleState;
     }

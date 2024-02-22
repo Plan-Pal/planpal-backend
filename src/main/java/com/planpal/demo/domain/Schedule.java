@@ -20,45 +20,45 @@ public class Schedule extends BaseEntity {
     private Long id;
 
     @Column(nullable = false, length = 5)
-    private String short_title;
+    private String shortTitle;
 
     @Column(nullable = false, length = 20)
-    private String long_title;
+    private String longTitle;
 
     @Column(length = 100)
     private String memo;
 
     @Column(nullable = false)
-    private LocalDateTime appointed_time;
+    private LocalDateTime appointedTime;
 
     @Column(nullable = false, length = 40)
     private String place;
 
     @Column
-    private int limited_number;
+    private int limitedNumber;
 
     @Column(nullable = false)
-    private ScheduleState schedule_state;
+    private ScheduleState scheduleState;
 
     @Builder
-    public Schedule(String short_title, String long_title, String memo, LocalDateTime appointed_time, String place, int limited_number, ScheduleState schedule_state){
-        this.short_title=short_title;
-        this.long_title=long_title;
+    public Schedule(String shortTitle, String longTitle, String memo, LocalDateTime appointedTime, String place, int limitedNumber){
+        this.shortTitle=shortTitle;
+        this.longTitle=longTitle;
         this.memo=memo;
-        this.appointed_time=appointed_time;
+        this.appointedTime=appointedTime;
         this.place=place;
-        this.limited_number=limited_number;
-        this.schedule_state=schedule_state;
+        this.limitedNumber=limitedNumber;
+        this.scheduleState=ScheduleState.PRIVATE;
     }
 
     public void update(UpdateScheduleRequest request){
-        this.short_title=request.getShort_title();
-        this.long_title= request.getLong_title();
+        this.shortTitle=request.getShortTitle();
+        this.longTitle= request.getLongTitle();
         this.memo=request.getMemo();
-        this.appointed_time=request.getAppointed_time();
+        this.appointedTime=request.getAppointedTime();
         this.place= request.getPlace();
-        this.limited_number=request.getLimited_number();
-        this.schedule_state=request.getSchedule_state();
+        this.limitedNumber=request.getLimitedNumber();
+        this.scheduleState=request.getScheduleState();
     }
 }
 
