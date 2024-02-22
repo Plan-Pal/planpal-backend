@@ -11,39 +11,39 @@ import java.util.List;
 public class ScheduleConverter {
     public static Schedule toSchedule(AddScheduleRequest request){
         return Schedule.builder()
-                .short_title(request.getShort_title())
-                .long_title(request.getLong_title())
+                .shortTitle(request.getShortTitle())
+                .longTitle(request.getLongTitle())
                 .memo(request.getMemo())
-                .appointed_time(request.getAppointed_time())
+                .appointedTime(request.getAppointedTime())
                 .place(request.getPlace())
-                .limited_number(request.getLimited_number())
-                .schedule_state(request.getSchedule_state())
+                .limitedNumber(request.getLimitedNumber())
+                .scheduleState(request.getScheduleState())
                 .build();
     }
 
     public static GetScheduleResponse toGetScheduleResponse(Schedule schedule){
         return GetScheduleResponse.builder()
-                .short_title(schedule.getShort_title())
-                .long_title(schedule.getLong_title())
+                .shortTitle(schedule.getShortTitle())
+                .longTitle(schedule.getLongTitle())
                 .memo(schedule.getMemo())
-                .appointed_time(schedule.getAppointed_time())
+                .appointedTime(schedule.getAppointedTime())
                 .place(schedule.getPlace())
-                .scheduleState(schedule.getSchedule_state())
+                .scheduleState(schedule.getScheduleState())
                 .build();
     }
 
     public static GetSimpleScheduleResponse toSimpleSchedule(Schedule schedule){
         return GetSimpleScheduleResponse.builder()
-                .title(schedule.getLong_title())
-                .appointed_time(schedule.getAppointed_time())
+                .title(schedule.getLongTitle())
+                .appointedTime(schedule.getAppointedTime())
                 .place(schedule.getPlace())
-                .scheduleState(schedule.getSchedule_state())
+                .scheduleState(schedule.getScheduleState())
                 .build();
     }
 
     public static GetAllScheduleListResponse toSimpleScheduleList(List<GetSimpleScheduleResponse> schedules){
         return GetAllScheduleListResponse.builder()
-                .schedule_count(schedules.size())
+                .scheduleCount(schedules.size())
                 .schedules(schedules)
                 .build();
     }
