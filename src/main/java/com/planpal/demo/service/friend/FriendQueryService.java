@@ -26,6 +26,14 @@ public class FriendQueryService {
         return userRepository.findByTagIdStartsWith(tagId);
     }
 
+    public List<User> getFriendRequestReceiver(Long userId) {
+        User sender = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+        return sender.getSendList().stream()
+                .map(FriendRequest::getReceiver)
+                .toList();
+    }
+
     public List<User> getFriendRequestSenders(Long userId) {
         User receiver = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
