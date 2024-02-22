@@ -12,7 +12,7 @@ public class FriendConverter {
                 user.getTagId());
     }
 
-    public static FriendRequest toFriendRequest(User inviter, User invitee) {
-        return new FriendRequest(inviter, invitee);
+    public static FriendRequest toFriendRequest(User sender, User receiver) {
+        return new FriendRequest(sender, receiver);
     }
 }

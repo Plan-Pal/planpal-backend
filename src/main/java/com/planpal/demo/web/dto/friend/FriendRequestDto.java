@@ -5,7 +5,7 @@ import lombok.Getter;
 
 public class FriendRequestDto {
     @Getter
-    public static class InviteDto {
+    public static class RequestDto {
         @NotNull
         private Long friendId;
     }
