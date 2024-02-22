@@ -7,6 +7,7 @@ import com.planpal.demo.web.dto.schedule.AddScheduleRequest;
 import com.planpal.demo.web.dto.schedule.UpdateScheduleRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +17,9 @@ public class ScheduleRestController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/schedules")
-    public ApiResponse<Void> createSchedule(@RequestBody AddScheduleRequest request){
-        scheduleService.saveSchedule(request);
+    public ApiResponse<Void> createSchedule(@AuthenticationPrincipal Long inviterId,
+                                            @RequestBody AddScheduleRequest request){
+        scheduleService.saveSchedule(inviterId, request);
         return ApiResponse.of(SuccessStatus._CREATED, null);
     }
 
