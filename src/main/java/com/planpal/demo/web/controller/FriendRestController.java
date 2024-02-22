@@ -19,9 +19,17 @@ public class FriendRestController {
 
     private final FriendQueryService friendQueryService;
 
-    @GetMapping
-    public ApiResponse<List<GetResultDto>> getUsersByNickname(@RequestParam String name) {
+    @GetMapping(params = "name")
+    public ApiResponse<List<GetResultDto>> getUsersByNickname(@RequestParam("name") String name) {
         List<GetResultDto> getResultDtos = friendQueryService.getUsersByNickname(name).stream()
+                .map(FriendConverter::toGetResultDto)
+                .toList();
+        return ApiResponse.onSuccess(getResultDtos);
+    }
+
+    @GetMapping(params = "id")
+    public ApiResponse<List<GetResultDto>> getUsersByTagId(@RequestParam("id") String id) {
+        List<GetResultDto> getResultDtos = friendQueryService.getUsersByTagId(id).stream()
                 .map(FriendConverter::toGetResultDto)
                 .toList();
         return ApiResponse.onSuccess(getResultDtos);
