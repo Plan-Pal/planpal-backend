@@ -37,4 +37,11 @@ public class FriendRestController {
         friendCommandService.acceptFriendRequest(userId, requestDto);
         return ApiResponse.onSuccess(null);
     }
+
+    @DeleteMapping
+    public ApiResponse<Void> deleteFriend(@AuthenticationPrincipal Long userId,
+                                          @RequestBody @Valid FriendDto friendDto) {
+        friendCommandService.deleteFriend(userId, friendDto);
+        return ApiResponse.onSuccess(null);
+    }
 }

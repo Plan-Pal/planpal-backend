@@ -29,8 +29,8 @@ public class FriendCommandService {
         User sender = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
-        User receiver = userRepository.findById(friendDto.getFriendId())
-                .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_NOT_FOUND));
+        User receiver = userRepository.findById(friendDto.getUserId())
+                .orElseThrow(() -> new FriendException(ErrorStatus.USER_NOT_FOUND));
 
         validateCanSend(sender, receiver);
 
@@ -59,6 +59,20 @@ public class FriendCommandService {
 
         friendRequestRepository.delete(friendRequest);
         friendRepository.save(friend);
+    }
+
+    public void deleteFriend(Long userId, FriendDto friendDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+
+        User friendUser = userRepository.findById(friendDto.getUserId())
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+
+        Friend friend = friendRepository.findByUser1AndUser2(user, friendUser)
+                .orElseGet(() -> friendRepository.findByUser1AndUser2(friendUser, user)
+                        .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_NOT_FOUND)));
+
+        friendRepository.delete(friend);
     }
 
     private void validateCanSend(User sender, User receiver) {
