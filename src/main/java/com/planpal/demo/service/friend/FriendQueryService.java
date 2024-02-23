@@ -18,14 +18,6 @@ public class FriendQueryService {
 
     private final UserRepository userRepository;
 
-    public List<User> getUsersByNickname(String nickname) {
-        return userRepository.findByNicknameContaining(nickname);
-    }
-
-    public List<User> getUsersByTagId(String tagId) {
-        return userRepository.findByTagIdStartsWith(tagId);
-    }
-
     public List<User> getFriendRequestReceiver(Long userId) {
         User sender = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
