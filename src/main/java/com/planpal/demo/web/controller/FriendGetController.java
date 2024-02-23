@@ -1,9 +1,12 @@
 package com.planpal.demo.web.controller;
 
 import com.planpal.demo.apipayload.ApiResponse;
+import com.planpal.demo.converter.FriendConverter;
 import com.planpal.demo.converter.UserConverter;
 import com.planpal.demo.service.friend.FriendQueryService;
 import com.planpal.demo.web.dto.UserResponseDto.GetResultDto;
+import com.planpal.demo.web.dto.friend.FriendResponseDto.GetReceivedFriendRequestDto;
+import com.planpal.demo.web.dto.friend.FriendResponseDto.GetSentFriendRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,17 +22,25 @@ public class FriendGetController {
 
     private final FriendQueryService friendQueryService;
 
-    @GetMapping("/request/send")
-    public ApiResponse<List<GetResultDto>> getFriendRequestReceiver(@AuthenticationPrincipal Long userId) {
-        List<GetResultDto> getResultDtos = friendQueryService.getFriendRequestReceiver(userId).stream()
-                .map(UserConverter::toGetResultDto)
+    @GetMapping("/request/sent")
+    public ApiResponse<List<GetSentFriendRequestDto>> getSentFriendRequests(@AuthenticationPrincipal Long userId) {
+        List<GetSentFriendRequestDto> getRequestDtos = friendQueryService.getSentFriendRequests(userId).stream()
+                .map(FriendConverter::toGetSentFriendRequestDto)
                 .toList();
         return ApiResponse.onSuccess(getResultDtos);
     }
 
-    @GetMapping("/request/receive")
-    public ApiResponse<List<GetResultDto>> getFriendRequestSenders(@AuthenticationPrincipal Long userId) {
-        List<GetResultDto> getResultDtos = friendQueryService.getFriendRequestSenders(userId).stream()
+    @GetMapping("/request/received")
+    public ApiResponse<List<GetReceivedFriendRequestDto>> getReceivedFriendRequests(@AuthenticationPrincipal Long userId) {
+        List<GetReceivedFriendRequestDto> getRequestDtos = friendQueryService.getReceivedFriendRequests(userId).stream()
+                .map(FriendConverter::toGetReceivedFriendRequestDto)
+                .toList();
+        return ApiResponse.onSuccess(getResultDtos);
+    }
+
+    @GetMapping
+    public ApiResponse<List<GetResultDto>> getFriends(@AuthenticationPrincipal Long userId) {
+        List<GetResultDto> getResultDtos = friendQueryService.getFriends(userId).stream()
                 .map(UserConverter::toGetResultDto)
                 .toList();
         return ApiResponse.onSuccess(getResultDtos);
