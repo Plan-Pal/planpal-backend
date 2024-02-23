@@ -55,12 +55,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY)
     private List<Friend> friendsAsUser2;
 
-    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
-    private List<Friend> friendsAsUser1;
-
-    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY)
-    private List<Friend> friendsAsUser2;
-
     @Builder
     public User(Long kakaoId, String nickname) {
         this.kakaoId = kakaoId;

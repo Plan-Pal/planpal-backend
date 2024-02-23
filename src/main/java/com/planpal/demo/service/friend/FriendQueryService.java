@@ -23,41 +23,13 @@ public class FriendQueryService {
     public List<FriendRequest> getSentFriendRequests(Long userId) {
         User sender = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        return sender.getSendList().stream()
-                .map(FriendRequest::getReceiver)
-                .toList();
+        return sender.getSentRequests();
     }
 
     public List<FriendRequest> getReceivedFriendRequests(Long userId) {
         User receiver = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        return receiver.getReceivedList().stream()
-                .map(FriendRequest::getSender)
-                .toList();
-    }
-
-    public List<User> getFriends(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-
-        return findFriends(user);
-    }
-
-    private static List<User> findFriends(User user) {
-        List<User> friends = new ArrayList<>();
-
-        List<User> friendsAsUser1 = user.getFriendsAsUser1().stream()
-                .map(Friend::getUser2)
-                .toList();
-
-        List<User> friendsAsUser2 = user.getFriendsAsUser2().stream()
-                .map(Friend::getUser1)
-                .toList();
-
-        friends.addAll(friendsAsUser1);
-        friends.addAll(friendsAsUser2);
-
-        return friends;
+        return receiver.getReceivedRequests();
     }
 
     public List<User> getFriends(Long userId) {
