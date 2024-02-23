@@ -59,4 +59,28 @@ public class FriendQueryService {
 
         return friends;
     }
+
+    public List<User> getFriends(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+
+        return findFriends(user);
+    }
+
+    private static List<User> findFriends(User user) {
+        List<User> friends = new ArrayList<>();
+
+        List<User> friendsAsUser1 = user.getFriendsAsUser1().stream()
+                .map(Friend::getUser2)
+                .toList();
+
+        List<User> friendsAsUser2 = user.getFriendsAsUser2().stream()
+                .map(Friend::getUser1)
+                .toList();
+
+        friends.addAll(friendsAsUser1);
+        friends.addAll(friendsAsUser2);
+
+        return friends;
+    }
 }

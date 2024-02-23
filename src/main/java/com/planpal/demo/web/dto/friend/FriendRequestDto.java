@@ -7,7 +7,7 @@ public class FriendRequestDto {
     @Getter
     public static class FriendDto {
         @NotNull
-        private Long friendId;
+        private Long userId;
     }
 
     @Getter

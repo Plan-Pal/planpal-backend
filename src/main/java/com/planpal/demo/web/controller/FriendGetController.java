@@ -45,4 +45,12 @@ public class FriendGetController {
                 .toList();
         return ApiResponse.onSuccess(getResultDtos);
     }
+
+    @GetMapping
+    public ApiResponse<List<GetResultDto>> getFriends(@AuthenticationPrincipal Long userId) {
+        List<GetResultDto> getResultDtos = friendQueryService.getFriends(userId).stream()
+                .map(UserConverter::toGetResultDto)
+                .toList();
+        return ApiResponse.onSuccess(getResultDtos);
+    }
 }
