@@ -22,6 +22,7 @@ public enum ErrorStatus {
     FRIEND_NOT_FOUND(HttpStatus.BAD_REQUEST, "FRIEND4001", "친구 정보를 찾을 수 없습니다"),
     FRIEND_REQUEST_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "FRIEND4002", "친구 신청 정보가 이미 존재합니다"),
     FRIEND_REQUEST_NOT_FOUND(HttpStatus.BAD_REQUEST, "FRIEND4003", "친구 신청 정보를 찾을 수 없습니다"),
+    FRIEND_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "FRIEND4004", "이미 친구 상태입니다"),
 
     // JWT
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "JWT4001", "인증에 실패하였습니다"),

@@ -26,9 +26,9 @@ public class FriendRequest extends BaseEntity {
 
     public FriendRequest(User sender, User receiver) {
         this.sender = sender;
-        sender.getSendList().add(this);
+        sender.getSentRequests().add(this);
 
         this.receiver = receiver;
-        receiver.getReceivedList().add(this);
+        receiver.getReceivedRequests().add(this);
     }
 }

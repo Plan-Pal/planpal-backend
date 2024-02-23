@@ -2,6 +2,7 @@ package com.planpal.demo.web.controller;
 
 import com.planpal.demo.apipayload.ApiResponse;
 import com.planpal.demo.service.friend.FriendCommandService;
+import com.planpal.demo.web.dto.friend.FriendRequestDto.FriendDto;
 import com.planpal.demo.web.dto.friend.FriendRequestDto.RequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class FriendRestController {
 
     @PostMapping("/request")
     public ApiResponse<Void> sendFriendRequest(@AuthenticationPrincipal Long userId,
-                                               @RequestBody @Valid RequestDto requestDto) {
-        friendCommandService.sendFriendRequest(userId, requestDto);
+                                               @RequestBody @Valid FriendDto friendDto) {
+        friendCommandService.sendFriendRequest(userId, friendDto);
         return ApiResponse.onSuccess(null);
     }
 

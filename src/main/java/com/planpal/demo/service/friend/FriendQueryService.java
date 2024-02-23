@@ -18,19 +18,15 @@ public class FriendQueryService {
 
     private final UserRepository userRepository;
 
-    public List<User> getFriendRequestReceiver(Long userId) {
+    public List<FriendRequest> getSentFriendRequest(Long userId) {
         User sender = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        return sender.getSendList().stream()
-                .map(FriendRequest::getReceiver)
-                .toList();
+        return sender.getSentRequests();
     }
 
-    public List<User> getFriendRequestSenders(Long userId) {
+    public List<FriendRequest> getReceivedFriendRequest(Long userId) {
         User receiver = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        return receiver.getReceivedList().stream()
-                .map(FriendRequest::getSender)
-                .toList();
+        return receiver.getReceivedRequests();
     }
 }
