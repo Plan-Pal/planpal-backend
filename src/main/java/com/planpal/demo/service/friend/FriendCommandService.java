@@ -3,9 +3,11 @@ package com.planpal.demo.service.friend;
 import com.planpal.demo.apipayload.status.ErrorStatus;
 import com.planpal.demo.converter.FriendConverter;
 import com.planpal.demo.domain.User;
+import com.planpal.demo.domain.mapping.Friend;
 import com.planpal.demo.domain.mapping.FriendRequest;
 import com.planpal.demo.exception.ex.FriendException;
 import com.planpal.demo.exception.ex.UserException;
+import com.planpal.demo.repository.FriendRepository;
 import com.planpal.demo.repository.FriendRequestRepository;
 import com.planpal.demo.repository.UserRepository;
 import com.planpal.demo.web.dto.friend.FriendRequestDto.RequestDto;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FriendCommandService {
 
     private final UserRepository userRepository;
+    private final FriendRepository friendRepository;
     private final FriendRequestRepository friendRequestRepository;
 
     public void sendFriendRequest(Long userId, RequestDto requestDto) {
@@ -44,6 +47,21 @@ public class FriendCommandService {
         FriendRequest friendRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver)
                 .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_REQUEST_NOT_FOUND));
         friendRequestRepository.delete(friendRequest);
+    }
+
+    public void acceptFriendRequest(Long userId, RequestDto requestDto) {
+        User receiver = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+
+        User sender = userRepository.findById(requestDto.getFriendId())
+                .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_NOT_FOUND));
+
+        FriendRequest friendRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver)
+                .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_REQUEST_NOT_FOUND));
+        friendRequestRepository.delete(friendRequest);
+
+        Friend friend = FriendConverter.toFriend(sender, receiver);
+        friendRepository.save(friend);
     }
 
     private void validateCanSend(User sender, User receiver) {

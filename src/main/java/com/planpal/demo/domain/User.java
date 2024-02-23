@@ -3,6 +3,7 @@ package com.planpal.demo.domain;
 import com.planpal.demo.domain.common.BaseEntity;
 import com.planpal.demo.domain.enums.AlarmState;
 import com.planpal.demo.domain.enums.UserState;
+import com.planpal.demo.domain.mapping.Friend;
 import com.planpal.demo.domain.mapping.FriendRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -47,6 +48,12 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     private List<FriendRequest> receivedList;
+
+    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
+    private List<Friend> friendsAsUser1;
+
+    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY)
+    private List<Friend> friendsAsUser2;
 
     @Builder
     public User(Long kakaoId, String nickname) {
