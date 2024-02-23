@@ -42,11 +42,11 @@ public class User extends BaseEntity {
 
     private LocalDate inactiveAt;
 
-    @OneToMany(mappedBy = "inviter", cascade = CascadeType.ALL)
-    private List<FriendRequest> inviteList;
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<FriendRequest> sendList;
 
-    @OneToMany(mappedBy = "invitee", cascade = CascadeType.ALL)
-    private List<FriendRequest> invitedList;
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private List<FriendRequest> receivedList;
 
     @Builder
     public User(Long kakaoId, String nickname) {

@@ -27,10 +27,10 @@ public class FriendQueryService {
     }
 
     public List<User> getFriendRequestSenders(Long userId) {
-        User invitee = userRepository.findById(userId)
+        User receiver = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        return invitee.getInvitedList().stream()
-                .map(FriendRequest::getInviter)
+        return receiver.getReceivedList().stream()
+                .map(FriendRequest::getSender)
                 .toList();
     }
 }
