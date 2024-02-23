@@ -25,8 +25,15 @@ public class FriendRestController {
 
     @DeleteMapping("/request")
     public ApiResponse<Void> deleteFriendRequest(@AuthenticationPrincipal Long userId,
-                                               @RequestBody @Valid RequestDto requestDto) {
+                                                 @RequestBody @Valid RequestDto requestDto) {
         friendCommandService.deleteFriendRequest(userId, requestDto);
+        return ApiResponse.onSuccess(null);
+    }
+
+    @PostMapping
+    public ApiResponse<Void> acceptFriendRequest(@AuthenticationPrincipal Long userId,
+                                                 @RequestBody @Valid RequestDto requestDto) {
+        friendCommandService.acceptFriendRequest(userId, requestDto);
         return ApiResponse.onSuccess(null);
     }
 }
