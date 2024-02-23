@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/friends/**").authenticated()
+                        .requestMatchers("/schedules/**").authenticated()
                         .anyRequest().permitAll())
                 .addFilterBefore(new BearerAuthFilter(jwtUtils), BasicAuthenticationFilter.class)
                 .exceptionHandling((exception) -> exception
