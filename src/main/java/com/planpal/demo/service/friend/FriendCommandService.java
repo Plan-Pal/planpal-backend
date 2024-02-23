@@ -10,6 +10,7 @@ import com.planpal.demo.exception.ex.UserException;
 import com.planpal.demo.repository.FriendRepository;
 import com.planpal.demo.repository.FriendRequestRepository;
 import com.planpal.demo.repository.UserRepository;
+import com.planpal.demo.web.dto.friend.FriendRequestDto.FriendDto;
 import com.planpal.demo.web.dto.friend.FriendRequestDto.RequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,11 @@ public class FriendCommandService {
     private final FriendRepository friendRepository;
     private final FriendRequestRepository friendRequestRepository;
 
-    public void sendFriendRequest(Long userId, RequestDto requestDto) {
+    public void sendFriendRequest(Long userId, FriendDto friendDto) {
         User sender = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
-        User receiver = userRepository.findById(requestDto.getFriendId())
+        User receiver = userRepository.findById(friendDto.getFriendId())
                 .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_NOT_FOUND));
 
         validateCanSend(sender, receiver);
@@ -41,12 +42,23 @@ public class FriendCommandService {
         User sender = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
-        User receiver = userRepository.findById(requestDto.getFriendId())
-                .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_NOT_FOUND));
-
-        FriendRequest friendRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver)
+        FriendRequest friendRequest = friendRequestRepository.findByIdAndSender(requestDto.getFriendRequestId(), sender)
                 .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_REQUEST_NOT_FOUND));
+
         friendRequestRepository.delete(friendRequest);
+    }
+
+    public void acceptFriendRequest(Long userId, RequestDto requestDto) {
+        User receiver = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+
+        FriendRequest friendRequest = friendRequestRepository.findByIdAndReceiver(requestDto.getFriendRequestId(), receiver)
+                .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_REQUEST_NOT_FOUND));
+
+        Friend friend = FriendConverter.toFriend(friendRequest.getSender(), receiver);
+
+        friendRequestRepository.delete(friendRequest);
+        friendRepository.save(friend);
     }
 
     public void acceptFriendRequest(Long userId, RequestDto requestDto) {
@@ -67,7 +79,7 @@ public class FriendCommandService {
     private void validateCanSend(User sender, User receiver) {
         validateNewRequest(sender, receiver);
         validateNotMyself(sender, receiver);
-        // TODO: 이미 친구로 맺어진 경우 예외 호출
+        validateNotFriend(sender, receiver);
     }
 
     private void validateNewRequest(User sender, User receiver) {
@@ -76,9 +88,18 @@ public class FriendCommandService {
             throw new FriendException(ErrorStatus.FRIEND_REQUEST_ALREADY_EXISTS);
         }
     }
+
     private static void validateNotMyself(User sender, User receiver) {
         if (sender == receiver) {
             throw new UserException(ErrorStatus.NOT_APPLY_MYSELF);
+        }
+    }
+
+    private void validateNotFriend(User user1, User user2) {
+        boolean alreadyExists = friendRepository.existsByUser1AndUser2(user1, user2)
+                || friendRepository.existsByUser1AndUser2(user2, user1);
+        if (alreadyExists) {
+            throw new FriendException(ErrorStatus.FRIEND_ALREADY_EXISTS);
         }
     }
 }

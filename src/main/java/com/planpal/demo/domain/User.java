@@ -44,10 +44,16 @@ public class User extends BaseEntity {
     private LocalDate inactiveAt;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    private List<FriendRequest> sendList;
+    private List<FriendRequest> sentRequests;
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
-    private List<FriendRequest> receivedList;
+    private List<FriendRequest> receivedRequests;
+
+    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
+    private List<Friend> friendsAsUser1;
+
+    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY)
+    private List<Friend> friendsAsUser2;
 
     @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
     private List<Friend> friendsAsUser1;
