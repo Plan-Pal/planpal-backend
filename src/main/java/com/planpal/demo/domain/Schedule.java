@@ -4,10 +4,7 @@ import com.planpal.demo.domain.common.BaseEntity;
 import com.planpal.demo.domain.enums.ScheduleState;
 import com.planpal.demo.web.dto.schedule.UpdateScheduleRequest;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,6 +36,7 @@ public class Schedule extends BaseEntity {
     @Column
     private int limitedNumber;
 
+    @Setter
     @Column(nullable = false)
     private ScheduleState scheduleState;
 

@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -121,5 +120,45 @@ public class ScheduleService {
         }
 
         return ScheduleConverter.toSimpleScheduleList(simpleSchedules);
+    }
+
+    /*
+     * 일정 삭제 - PRIVATE 상태라면 아예 삭제
+     *          - PUBLIC 상태라면 user 연결 만 삭제 (1명 되면 PRIVATE 변환)
+     *          - PUBLIC 상태이고 참여자가 1명 일 때 invited_schedule 까지 모두 삭제
+     * */
+    public void deleteSchedule(Long scheduleId, Long userId){
+        Schedule schedule=schedulesRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleException(ErrorStatus.SCHEDULE_NOT_FOUND));
+        User user=userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+
+        AddedSchedule deleteSchedule = schedule.getAddedSchedules().stream()
+                .filter(addedSchedule -> addedSchedule.getUser().getId().equals(userId)
+                        && addedSchedule.getSchedule().getId().equals(scheduleId))
+                .findFirst()
+                .orElseThrow(() -> new ScheduleException(ErrorStatus.SCHEDULE_NOT_FOUND));
+
+        schedule.getAddedSchedules().remove(deleteSchedule);
+        user.getAddedSchedules().remove(deleteSchedule);
+        addedScheduleRepository.delete(deleteSchedule);
+
+        if (schedule.getScheduleState() == ScheduleState.PUBLIC){
+            if (schedule.getAddedSchedules().size() == 1 && schedule.getInvitedSchedules().size() == 0){
+                schedule.setScheduleState(ScheduleState.PRIVATE);
+            } else if (schedule.getAddedSchedules().size() == 0){
+                List<InvitedSchedule> invitedScheduleList=invitedScheduleRepository.findAllByScheduleId(scheduleId);
+                if (!invitedScheduleList.isEmpty()){
+                    for (InvitedSchedule invitedSchedule : invitedScheduleList){
+                        schedule.getInvitedSchedules().remove(invitedSchedule);
+                        user.getInvitedSchedules().remove(invitedSchedule);
+                        invitedScheduleRepository.delete(invitedSchedule);
+                    }
+                }
+                schedulesRepository.delete(schedule);
+            }
+        } else{
+            schedulesRepository.delete(schedule);
+        }
     }
 }

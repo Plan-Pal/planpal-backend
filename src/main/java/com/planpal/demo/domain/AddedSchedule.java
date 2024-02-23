@@ -2,10 +2,7 @@ package com.planpal.demo.domain;
 
 import com.planpal.demo.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -23,6 +20,7 @@ public class AddedSchedule extends BaseEntity{
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
+    @Setter
     @Column(nullable = false)
     private Boolean isChecked;
 

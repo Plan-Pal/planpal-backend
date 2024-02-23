@@ -31,4 +31,11 @@ public class ScheduleRestController {
         scheduleService.updateSchedule(scheduleId, modifierId, request);
         return ApiResponse.of(SuccessStatus._OK, null);
     }
+
+    @DeleteMapping("/schedules/{scheduleId}")
+    public ApiResponse<Void> deleteSchedule(@PathVariable Long scheduleId,
+                                            @AuthenticationPrincipal Long userId){
+        scheduleService.deleteSchedule(scheduleId, userId);
+        return ApiResponse.of(SuccessStatus._OK, null);
+    }
 }
