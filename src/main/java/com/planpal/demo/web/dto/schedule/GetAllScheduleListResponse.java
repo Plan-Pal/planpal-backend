@@ -7,13 +7,13 @@ import java.util.List;
 
 @Getter
 public class GetAllScheduleListResponse {
-    private final int schedule_count;
+    private final int scheduleCount;
     private final List<GetSimpleScheduleResponse> schedules;
 
     @Builder
-    public GetAllScheduleListResponse(int schedule_count,
+    public GetAllScheduleListResponse(int scheduleCount,
                                    List<GetSimpleScheduleResponse> schedules){
-        this.schedule_count=schedule_count;
+        this.scheduleCount=scheduleCount;
         this.schedules=schedules;
     }
 }

@@ -9,17 +9,17 @@ import java.time.LocalDateTime;
 @Getter
 public class GetSimpleScheduleResponse {
     private final String title;
-    private final LocalDateTime appointed_time;
+    private final LocalDateTime appointedTime;
     private final String place;
     private final ScheduleState scheduleState;
 
     @Builder
     public GetSimpleScheduleResponse(String title,
-                                     LocalDateTime appointed_time,
+                                     LocalDateTime appointedTime,
                                      String place,
                                      ScheduleState scheduleState){
         this.title=title;
-        this.appointed_time=appointed_time;
+        this.appointedTime=appointedTime;
         this.place=place;
         this.scheduleState=scheduleState;
     }

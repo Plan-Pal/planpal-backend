@@ -6,16 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddScheduleRequest {
-    private String short_title;
-    private String long_title;
+    private String shortTitle;
+    private String longTitle;
     private String memo;
-    private LocalDateTime appointed_time;
+    private LocalDateTime appointedTime;
     private String place;
-    private int limited_number;
-    private ScheduleState schedule_state;
+    private int limitedNumber;
+    private ScheduleState scheduleState;
+
+    private List<Long> invitedIdList;
 }

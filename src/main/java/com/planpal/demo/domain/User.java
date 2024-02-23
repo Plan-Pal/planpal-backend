@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -67,4 +68,10 @@ public class User extends BaseEntity {
     private String generateRandomTagId() {
         return UUID.randomUUID().toString().substring(0, 4);
     }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<AddedSchedule> addedSchedules=new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<InvitedSchedule> invitedSchedules=new ArrayList<>();
 }
