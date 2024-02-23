@@ -3,6 +3,8 @@ package com.planpal.demo.domain;
 import com.planpal.demo.domain.common.BaseEntity;
 import com.planpal.demo.domain.enums.AlarmState;
 import com.planpal.demo.domain.enums.UserState;
+import com.planpal.demo.domain.mapping.Friend;
+import com.planpal.demo.domain.mapping.FriendRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -39,6 +42,24 @@ public class User extends BaseEntity {
     private UserState userState;
 
     private LocalDate inactiveAt;
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<FriendRequest> sentRequests;
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private List<FriendRequest> receivedRequests;
+
+    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
+    private List<Friend> friendsAsUser1;
+
+    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY)
+    private List<Friend> friendsAsUser2;
+
+    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
+    private List<Friend> friendsAsUser1;
+
+    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY)
+    private List<Friend> friendsAsUser2;
 
     @Builder
     public User(Long kakaoId, String nickname) {

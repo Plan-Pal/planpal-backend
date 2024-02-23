@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,7 +70,9 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
 
         ex.getBindingResult().getFieldErrors()
                 .forEach(fieldError -> {
-                    String fieldName = fieldError.getField();
+                    String fieldName = StringUtils.uncapitalize(
+                            fieldError.getField().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase()
+                    );
                     String errorMessage = Optional.ofNullable(fieldError.getDefaultMessage()).orElse("");
                     errors.merge(fieldName, errorMessage,
                             (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", " + newErrorMessage);
