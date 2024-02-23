@@ -2,34 +2,34 @@ package com.planpal.demo.web.controller;
 
 import com.planpal.demo.apipayload.ApiResponse;
 import com.planpal.demo.converter.UserConverter;
-import com.planpal.demo.service.friend.FriendQueryService;
+import com.planpal.demo.service.user.UserQueryService;
 import com.planpal.demo.web.dto.UserResponseDto.GetResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/friends")
+@RequestMapping("/users")
 @RequiredArgsConstructor
-public class FriendGetController {
+public class UserGetController {
 
-    private final FriendQueryService friendQueryService;
+    private final UserQueryService userQueryService;
 
-    @GetMapping("/request/send")
-    public ApiResponse<List<GetResultDto>> getFriendRequestReceiver(@AuthenticationPrincipal Long userId) {
-        List<GetResultDto> getResultDtos = friendQueryService.getFriendRequestReceiver(userId).stream()
+    @GetMapping(params = "name")
+    public ApiResponse<List<GetResultDto>> getUsersByNickname(@RequestParam("name") String name) {
+        List<GetResultDto> getResultDtos = userQueryService.getUsersByNickname(name).stream()
                 .map(UserConverter::toGetResultDto)
                 .toList();
         return ApiResponse.onSuccess(getResultDtos);
     }
 
-    @GetMapping("/request/receive")
-    public ApiResponse<List<GetResultDto>> getFriendRequestSenders(@AuthenticationPrincipal Long userId) {
-        List<GetResultDto> getResultDtos = friendQueryService.getFriendRequestSenders(userId).stream()
+    @GetMapping(params = "id")
+    public ApiResponse<List<GetResultDto>> getUsersByTagId(@RequestParam("id") String id) {
+        List<GetResultDto> getResultDtos = userQueryService.getUsersByTagId(id).stream()
                 .map(UserConverter::toGetResultDto)
                 .toList();
         return ApiResponse.onSuccess(getResultDtos);

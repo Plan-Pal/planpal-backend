@@ -10,4 +10,12 @@ public class UserResponseDto {
     public static class SignUpResultDto {
         private String accessToken;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class GetResultDto {
+        private Long id;
+        private String nickname;
+        private String tagId;
+    }
 }

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -18,5 +20,13 @@ public class UserQueryService {
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+    }
+
+    public List<User> getUsersByNickname(String nickname) {
+        return userRepository.findByNicknameContaining(nickname);
+    }
+
+    public List<User> getUsersByTagId(String tagId) {
+        return userRepository.findByTagIdStartsWith(tagId);
     }
 }
