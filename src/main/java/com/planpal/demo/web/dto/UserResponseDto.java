@@ -14,7 +14,7 @@ public class UserResponseDto {
     @Getter
     @AllArgsConstructor
     public static class GetResultDto {
-        private Long userId;
+        private Long id;
         private String nickname;
         private String tagId;
     }

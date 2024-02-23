@@ -23,13 +23,17 @@ public class FriendQueryService {
     public List<FriendRequest> getSentFriendRequests(Long userId) {
         User sender = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        return sender.getSentRequests();
+        return sender.getSendList().stream()
+                .map(FriendRequest::getReceiver)
+                .toList();
     }
 
     public List<FriendRequest> getReceivedFriendRequests(Long userId) {
         User receiver = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        return receiver.getReceivedRequests();
+        return receiver.getReceivedList().stream()
+                .map(FriendRequest::getSender)
+                .toList();
     }
 
     public List<User> getFriends(Long userId) {

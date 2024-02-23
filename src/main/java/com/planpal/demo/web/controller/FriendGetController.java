@@ -27,7 +27,7 @@ public class FriendGetController {
         List<GetSentFriendRequestDto> getRequestDtos = friendQueryService.getSentFriendRequests(userId).stream()
                 .map(FriendConverter::toGetSentFriendRequestDto)
                 .toList();
-        return ApiResponse.onSuccess(getRequestDtos);
+        return ApiResponse.onSuccess(getResultDtos);
     }
 
     @GetMapping("/request/received")
@@ -35,7 +35,7 @@ public class FriendGetController {
         List<GetReceivedFriendRequestDto> getRequestDtos = friendQueryService.getReceivedFriendRequests(userId).stream()
                 .map(FriendConverter::toGetReceivedFriendRequestDto)
                 .toList();
-        return ApiResponse.onSuccess(getRequestDtos);
+        return ApiResponse.onSuccess(getResultDtos);
     }
 
     @GetMapping
