@@ -18,4 +18,8 @@ public class FriendQueryService {
     public List<User> getUsersByNickname(String nickname) {
         return userRepository.findByNicknameContaining(nickname);
     }
+
+    public List<User> getUsersByTagId(String tagId) {
+        return userRepository.findByTagIdStartsWith(tagId);
+    }
 }
