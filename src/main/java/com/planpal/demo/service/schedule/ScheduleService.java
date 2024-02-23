@@ -9,6 +9,8 @@ import com.planpal.demo.domain.User;
 import com.planpal.demo.domain.enums.ScheduleState;
 import com.planpal.demo.exception.ex.ScheduleException;
 import com.planpal.demo.exception.ex.UserException;
+import com.planpal.demo.repository.AddedScheduleRepository;
+import com.planpal.demo.repository.InvitedScheduleRepository;
 import com.planpal.demo.repository.SchedulesRepository;
 import com.planpal.demo.repository.UserRepository;
 import com.planpal.demo.web.dto.schedule.*;
@@ -25,7 +27,12 @@ import java.util.List;
 public class ScheduleService {
     private final SchedulesRepository schedulesRepository;
     private final UserRepository userRepository;
+    private final InvitedScheduleRepository invitedScheduleRepository;
+    private final AddedScheduleRepository addedScheduleRepository;
 
+    /*
+    * 일정 저장
+    * */
     public void saveSchedule(Long invitorId, AddScheduleRequest request){
         Schedule schedule = ScheduleConverter.toSchedule(request);
         User inviter=userRepository.findById(invitorId)
@@ -34,7 +41,7 @@ public class ScheduleService {
         AddedSchedule addedSchedule = AddedSchedule.builder()
                 .user(inviter)
                 .schedule(schedule)
-                .isChecked(false)
+                .isChecked(true)
                 .build();
         inviter.getAddedSchedules().add(addedSchedule);
         schedule.getAddedSchedules().add(addedSchedule);
@@ -57,18 +64,27 @@ public class ScheduleService {
         schedulesRepository.save(schedule);
     }
 
+    /*
+    * 일정 수정
+    * */
     public void updateSchedule(Long scheduleId, UpdateScheduleRequest request){
         Schedule findSchedule = schedulesRepository.findById(scheduleId)
                 .orElseThrow(() -> new ScheduleException(ErrorStatus.SCHEDULE_NOT_FOUND));
         findSchedule.update(request);
     }
 
+    /*
+    * 하나의 일정 조회
+    * */
     public GetScheduleResponse getSchedule(Long scheduleId){
         Schedule schedule=schedulesRepository.findById(scheduleId)
                         .orElseThrow(() -> new ScheduleException(ErrorStatus.SCHEDULE_NOT_FOUND));
         return ScheduleConverter.toGetScheduleResponse(schedule);
     }
-    
+
+    /*
+    * 간단 일정 전체 조회
+    * */
     public GetAllScheduleListResponse getAllSimpleScheduls(){
         List<Schedule> schedules = schedulesRepository.findAll();
         List<GetSimpleScheduleResponse> simpleSchedules=new ArrayList<>();
