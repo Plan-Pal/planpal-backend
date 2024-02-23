@@ -6,10 +6,7 @@ import com.planpal.demo.web.dto.friend.FriendRequestDto.RequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -23,6 +20,13 @@ public class FriendRestController {
     public ApiResponse<Void> sendFriendRequest(@AuthenticationPrincipal Long userId,
                                                @RequestBody @Valid RequestDto requestDto) {
         friendCommandService.sendFriendRequest(userId, requestDto);
+        return ApiResponse.onSuccess(null);
+    }
+
+    @DeleteMapping("/request")
+    public ApiResponse<Void> deleteFriendRequest(@AuthenticationPrincipal Long userId,
+                                               @RequestBody @Valid RequestDto requestDto) {
+        friendCommandService.deleteFriendRequest(userId, requestDto);
         return ApiResponse.onSuccess(null);
     }
 }

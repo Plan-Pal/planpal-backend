@@ -22,21 +22,31 @@ public class FriendCommandService {
     private final FriendRequestRepository friendRequestRepository;
 
     public void sendFriendRequest(Long userId, RequestDto requestDto) {
-        Long friendId = requestDto.getFriendId();
-
         User sender = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
-        User receiver = userRepository.findById(friendId)
+        User receiver = userRepository.findById(requestDto.getFriendId())
                 .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_NOT_FOUND));
 
-        validate(sender, receiver);
+        validateCanSend(sender, receiver);
 
         FriendRequest friendRequest = FriendConverter.toFriendRequest(sender, receiver);
         friendRequestRepository.save(friendRequest);
     }
 
-    private void validate(User sender, User receiver) {
+    public void deleteFriendRequest(Long userId, RequestDto requestDto) {
+        User sender = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+
+        User receiver = userRepository.findById(requestDto.getFriendId())
+                .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_NOT_FOUND));
+
+        FriendRequest friendRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver)
+                .orElseThrow(() -> new FriendException(ErrorStatus.FRIEND_REQUEST_NOT_FOUND));
+        friendRequestRepository.delete(friendRequest);
+    }
+
+    private void validateCanSend(User sender, User receiver) {
         validateNewRequest(sender, receiver);
         validateNotMyself(sender, receiver);
         // TODO: 이미 친구로 맺어진 경우 예외 호출
@@ -45,7 +55,7 @@ public class FriendCommandService {
     private void validateNewRequest(User sender, User receiver) {
         boolean alreadyExists = friendRequestRepository.existsBySenderAndReceiver(sender, receiver);
         if (alreadyExists) {
-            throw new FriendException(ErrorStatus.REQUEST_ALREADY_EXISTS);
+            throw new FriendException(ErrorStatus.FRIEND_REQUEST_ALREADY_EXISTS);
         }
     }
     private static void validateNotMyself(User sender, User receiver) {
