@@ -25,8 +25,10 @@ public class ScheduleRestController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/schedules/{scheduleId}")
-    public ApiResponse<Void> updateSchedule(@PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request){
-        scheduleService.updateSchedule(scheduleId, request);
+    public ApiResponse<Void> updateSchedule(@PathVariable Long scheduleId,
+                                            @AuthenticationPrincipal Long modifierId,
+                                            @RequestBody UpdateScheduleRequest request){
+        scheduleService.updateSchedule(scheduleId, modifierId, request);
         return ApiResponse.of(SuccessStatus._OK, null);
     }
 }

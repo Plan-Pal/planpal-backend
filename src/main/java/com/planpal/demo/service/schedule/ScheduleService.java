@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -65,12 +66,38 @@ public class ScheduleService {
     }
 
     /*
-    * 일정 수정
-    * */
-    public void updateSchedule(Long scheduleId, UpdateScheduleRequest request){
+     * 일정 수정
+     * */
+    public void updateSchedule(Long scheduleId, Long modifierId, UpdateScheduleRequest request){
         Schedule findSchedule = schedulesRepository.findById(scheduleId)
                 .orElseThrow(() -> new ScheduleException(ErrorStatus.SCHEDULE_NOT_FOUND));
         findSchedule.update(request);
+
+        List<InvitedSchedule> existingInvitedSchedules = findSchedule.getInvitedSchedules();
+        List<Long> existingInvitedIds = existingInvitedSchedules.stream()
+                .map(invitedSchedule -> invitedSchedule.getUser().getId())
+                .toList();
+
+        for (Long invitedId : request.getInvitedIdList()){
+            if (!existingInvitedIds.contains(invitedId)){
+                User invitedUser = userRepository.findById(invitedId)
+                        .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+                InvitedSchedule newinvitedSchedule = InvitedSchedule.builder()
+                        .user(invitedUser)
+                        .schedule(findSchedule)
+                        .build();
+
+                findSchedule.getInvitedSchedules().add(newinvitedSchedule);
+                invitedUser.getInvitedSchedules().add(newinvitedSchedule);
+            }
+        }
+
+        List<AddedSchedule> existingAddedSchedules = findSchedule.getAddedSchedules();
+        for (AddedSchedule addedSchedule : existingAddedSchedules){
+            if (!addedSchedule.getUser().getId().equals(modifierId)){
+                addedSchedule.setIsChecked(false);
+            }
+        }
     }
 
     /*
