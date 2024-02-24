@@ -28,7 +28,8 @@ public enum ErrorStatus {
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "JWT4001", "인증에 실패하였습니다"),
 
     // SCHEDULE
-    SCHEDULE_NOT_FOUND(HttpStatus.BAD_REQUEST, "SCHEDULE4001", "일정 정보를 찾을 수 없습니다")
+    SCHEDULE_NOT_FOUND(HttpStatus.BAD_REQUEST, "SCHEDULE4001", "일정 정보를 찾을 수 없습니다"),
+    INVITED_SCHEDULE_NOT_FOUND(HttpStatus.BAD_REQUEST, "SCHEDULE4002", "초대 일정 정보를 찾을 수 없습니다")
     ;
 
     private final HttpStatus httpStatus;
