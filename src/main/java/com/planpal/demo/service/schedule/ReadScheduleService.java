@@ -7,6 +7,7 @@ import com.planpal.demo.domain.AddedSchedule;
 import com.planpal.demo.domain.Schedule;
 import com.planpal.demo.exception.ex.ScheduleException;
 import com.planpal.demo.repository.AddedScheduleRepository;
+import com.planpal.demo.repository.InvitedScheduleRepository;
 import com.planpal.demo.repository.SchedulesRepository;
 import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
 import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class ReadScheduleService {
     private final SchedulesRepository schedulesRepository;
     private final AddedScheduleRepository addedScheduleRepository;
+    private final InvitedScheduleRepository invitedScheduleRepository;
 
     /*
      * 하나의 일정 조회
@@ -34,7 +36,8 @@ public class ReadScheduleService {
         Schedule schedule=schedulesRepository.findById(scheduleId)
                 .orElseThrow(() -> new ScheduleException(ErrorStatus.SCHEDULE_NOT_FOUND));
 
-        if (!addedScheduleRepository.existsByUserIdAndScheduleId(userId, scheduleId)){
+        if (!addedScheduleRepository.existsByUserIdAndScheduleId(userId, scheduleId)
+        && !invitedScheduleRepository.existsByUserIdAndScheduleId(userId, scheduleId)){
             throw new ScheduleException(ErrorStatus.UNAUTHORIZED_USER_ACCESS);
         }
 
@@ -46,8 +49,8 @@ public class ReadScheduleService {
     private List<SimpleUserInfo> getUserIdsByScheduleId(Long scheduleId){
         List<AddedSchedule> addedSchedules = addedScheduleRepository.findByScheduleId(scheduleId);
         return addedSchedules.stream()
-                .map(addedSchedule -> addedSchedule.getUser())
-                .map(user -> UserConverter.toSimpleUserInfo(user))
+                .map(AddedSchedule::getUser)
+                .map(UserConverter::toSimpleUserInfo)
                 .collect(Collectors.toList());
     }
 
