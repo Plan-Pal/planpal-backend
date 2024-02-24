@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class GetScheduleResponse {
@@ -14,6 +15,7 @@ public class GetScheduleResponse {
     private final LocalDateTime appointedTime;
     private final String place;
     private final ScheduleState scheduleState;
+    private final List<SimpleUserInfo> participatingUserList;
 
     @Builder
     public GetScheduleResponse(String shortTitle,
@@ -21,12 +23,14 @@ public class GetScheduleResponse {
                                String memo,
                                LocalDateTime appointedTime,
                                String place,
-                               ScheduleState scheduleState){
+                               ScheduleState scheduleState,
+                               List<SimpleUserInfo> participatingUserList){
         this.shortTitle=shortTitle;
         this.longTitle=longTitle;
         this.memo=memo;
         this.appointedTime=appointedTime;
         this.place=place;
         this.scheduleState=scheduleState;
+        this.participatingUserList=participatingUserList;
     }
 }

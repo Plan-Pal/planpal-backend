@@ -4,6 +4,7 @@ import com.planpal.demo.domain.User;
 import com.planpal.demo.web.dto.UserResponseDto.GetResultDto;
 import com.planpal.demo.web.dto.UserResponseDto.SignUpResultDto;
 import com.planpal.demo.web.dto.kakao.KakaoUserInfoDto;
+import com.planpal.demo.web.dto.schedule.SimpleUserInfo;
 
 public class UserConverter {
     public static User toUser(KakaoUserInfoDto userInfoDto) {
@@ -22,5 +23,9 @@ public class UserConverter {
                 user.getId(),
                 user.getNickname(),
                 user.getTagId());
+    }
+
+    public static SimpleUserInfo toSimpleUserInfo(User user){
+        return new SimpleUserInfo(user.getNickname());
     }
 }

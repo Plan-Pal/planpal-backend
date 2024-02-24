@@ -29,7 +29,8 @@ public enum ErrorStatus {
 
     // SCHEDULE
     SCHEDULE_NOT_FOUND(HttpStatus.BAD_REQUEST, "SCHEDULE4001", "일정 정보를 찾을 수 없습니다"),
-    INVITED_SCHEDULE_NOT_FOUND(HttpStatus.BAD_REQUEST, "SCHEDULE4002", "초대 일정 정보를 찾을 수 없습니다")
+    INVITED_SCHEDULE_NOT_FOUND(HttpStatus.BAD_REQUEST, "SCHEDULE4002", "초대 일정 정보를 찾을 수 없습니다"),
+    UNAUTHORIZED_USER_ACCESS(HttpStatus.BAD_REQUEST, "SCHEDULE4003", "해당 일정에 접근 권한이 없습니다.")
     ;
 
     private final HttpStatus httpStatus;
