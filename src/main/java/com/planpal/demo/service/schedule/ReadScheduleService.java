@@ -4,15 +4,13 @@ import com.planpal.demo.apipayload.status.ErrorStatus;
 import com.planpal.demo.converter.ScheduleConverter;
 import com.planpal.demo.converter.UserConverter;
 import com.planpal.demo.domain.AddedSchedule;
+import com.planpal.demo.domain.InvitedSchedule;
 import com.planpal.demo.domain.Schedule;
 import com.planpal.demo.exception.ex.ScheduleException;
 import com.planpal.demo.repository.AddedScheduleRepository;
 import com.planpal.demo.repository.InvitedScheduleRepository;
 import com.planpal.demo.repository.SchedulesRepository;
-import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
-import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
-import com.planpal.demo.web.dto.schedule.GetSimpleScheduleResponse;
-import com.planpal.demo.web.dto.schedule.SimpleUserInfo;
+import com.planpal.demo.web.dto.schedule.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +71,28 @@ public class ReadScheduleService {
         List<AddedSchedule> addedSchedules = addedScheduleRepository.findByUserId(userId);
         return addedSchedules.stream()
                 .map(addedSchedule -> addedSchedule.getSchedule().getId())
+                .collect(Collectors.toList());
+    }
+
+    /*
+    * 초대 받은 일정 조회
+    * */
+    public GetAllInvitedScheduleListResponse getAllInvitedSchedules(Long userId){
+        List<Long> userScheduleIdList = getInvitedScheduleIdsByUserId(userId);
+        List<Schedule> schedules = schedulesRepository.findAllByIdIn(userScheduleIdList);
+        List<GetSimpleScheduleResponse> simpleSchedules=new ArrayList<>();
+        for (Schedule schedule : schedules){
+            GetSimpleScheduleResponse simplesSchedule=ScheduleConverter.toSimpleSchedule(schedule);
+            simpleSchedules.add(simplesSchedule);
+        }
+
+        return ScheduleConverter.toSimpleInvitedScheduleList(simpleSchedules);
+    }
+
+    private List<Long> getInvitedScheduleIdsByUserId(Long userId){
+        List<InvitedSchedule> invitedSchedules = invitedScheduleRepository.findByUserId(userId);
+        return invitedSchedules.stream()
+                .map(invitedSchedule -> invitedSchedule.getSchedule().getId())
                 .collect(Collectors.toList());
     }
 }

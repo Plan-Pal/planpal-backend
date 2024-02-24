@@ -10,4 +10,5 @@ public interface InvitedScheduleRepository extends JpaRepository<InvitedSchedule
     List<InvitedSchedule> findAllByScheduleId(Long scheduleId);
     Optional<InvitedSchedule> findByUserIdAndScheduleId(Long userId, Long scheduleId);
     boolean existsByUserIdAndScheduleId(Long userId, Long scheduleId);
+    List<InvitedSchedule> findByUserId(Long userId);
 }
