@@ -2,6 +2,7 @@ package com.planpal.demo.service.schedule;
 
 import com.planpal.demo.apipayload.status.ErrorStatus;
 import com.planpal.demo.converter.ScheduleConverter;
+import com.planpal.demo.domain.AddedSchedule;
 import com.planpal.demo.domain.Schedule;
 import com.planpal.demo.exception.ex.ScheduleException;
 import com.planpal.demo.repository.AddedScheduleRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -39,8 +41,9 @@ public class ReadScheduleService {
     /*
      * 간단 일정 전체 조회
      * */
-    public GetAllScheduleListResponse getAllSimpleSchedules(){
-        List<Schedule> schedules = schedulesRepository.findAll();
+    public GetAllScheduleListResponse getAllSimpleSchedules(Long userId){
+        List<Long> userScheduleIdList = getScheduleIdsByUserId(userId);
+        List<Schedule> schedules = schedulesRepository.findAllByIdIn(userScheduleIdList);
         List<GetSimpleScheduleResponse> simpleSchedules=new ArrayList<>();
         for (Schedule schedule : schedules){
             GetSimpleScheduleResponse simplesSchedule=ScheduleConverter.toSimpleSchedule(schedule);
@@ -48,5 +51,12 @@ public class ReadScheduleService {
         }
 
         return ScheduleConverter.toSimpleScheduleList(simpleSchedules);
+    }
+
+    private List<Long> getScheduleIdsByUserId(Long userId){
+        List<AddedSchedule> addedSchedules = addedScheduleRepository.findByUserId(userId);
+        return addedSchedules.stream()
+                .map(addedSchedule -> addedSchedule.getSchedule().getId())
+                .collect(Collectors.toList());
     }
 }

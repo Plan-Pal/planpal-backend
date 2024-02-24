@@ -24,8 +24,8 @@ public class ReadScheduleController {
     }
 
     @GetMapping("/schedules")
-    public ApiResponse<GetAllScheduleListResponse> getAllSchedules(){
-        GetAllScheduleListResponse response=readScheduleService.getAllSimpleSchedules();
+    public ApiResponse<GetAllScheduleListResponse> getAllSchedules(@AuthenticationPrincipal Long userId){
+        GetAllScheduleListResponse response=readScheduleService.getAllSimpleSchedules(userId);
         return ApiResponse.of(SuccessStatus._OK, response);
     }
 }
