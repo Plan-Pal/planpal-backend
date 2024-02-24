@@ -4,4 +4,5 @@ import com.planpal.demo.domain.AddedSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AddedScheduleRepository extends JpaRepository<AddedSchedule, Long> {
+    boolean existsByUserIdAndScheduleId(Long userId, Long scheduleId);
 }

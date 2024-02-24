@@ -6,6 +6,7 @@ import com.planpal.demo.service.schedule.ReadScheduleService;
 import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
 import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +17,9 @@ public class ScheduleGetController {
     private final ReadScheduleService readScheduleService;
 
     @GetMapping("/schedules/{scheduleId}")
-    public ApiResponse<GetScheduleResponse> getSchedule(@PathVariable Long scheduleId){
-        GetScheduleResponse response=readScheduleService.getSchedule(scheduleId);
+    public ApiResponse<GetScheduleResponse> getSchedule(@PathVariable Long scheduleId,
+                                                        @AuthenticationPrincipal Long userId){
+        GetScheduleResponse response=readScheduleService.getSchedule(scheduleId, userId);
         return ApiResponse.of(SuccessStatus._OK, response);
     }
 

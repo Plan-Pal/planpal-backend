@@ -4,6 +4,7 @@ import com.planpal.demo.apipayload.status.ErrorStatus;
 import com.planpal.demo.converter.ScheduleConverter;
 import com.planpal.demo.domain.Schedule;
 import com.planpal.demo.exception.ex.ScheduleException;
+import com.planpal.demo.repository.AddedScheduleRepository;
 import com.planpal.demo.repository.SchedulesRepository;
 import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
 import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
@@ -20,12 +21,18 @@ import java.util.List;
 @Transactional
 public class ReadScheduleService {
     private final SchedulesRepository schedulesRepository;
+    private final AddedScheduleRepository addedScheduleRepository;
+
     /*
      * 하나의 일정 조회
      * */
-    public GetScheduleResponse getSchedule(Long scheduleId){
+    public GetScheduleResponse getSchedule(Long scheduleId, Long userId){
         Schedule schedule=schedulesRepository.findById(scheduleId)
                 .orElseThrow(() -> new ScheduleException(ErrorStatus.SCHEDULE_NOT_FOUND));
+
+        if (!addedScheduleRepository.existsByUserIdAndScheduleId(userId, scheduleId)){
+            throw new ScheduleException(ErrorStatus.UNAUTHORIZED_USER_ACCESS);
+        }
         return ScheduleConverter.toGetScheduleResponse(schedule);
     }
 
