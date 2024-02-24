@@ -1,4 +1,4 @@
-package com.planpal.demo.web.controller;
+package com.planpal.demo.web.controller.schedule;
 
 import com.planpal.demo.apipayload.ApiResponse;
 import com.planpal.demo.apipayload.status.SuccessStatus;
