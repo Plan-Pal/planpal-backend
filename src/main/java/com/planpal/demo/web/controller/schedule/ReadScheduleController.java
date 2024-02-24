@@ -3,6 +3,7 @@ package com.planpal.demo.web.controller.schedule;
 import com.planpal.demo.apipayload.ApiResponse;
 import com.planpal.demo.apipayload.status.SuccessStatus;
 import com.planpal.demo.service.schedule.ReadScheduleService;
+import com.planpal.demo.web.dto.schedule.GetAllInvitedScheduleListResponse;
 import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
 import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,13 @@ public class ReadScheduleController {
 
     @GetMapping("/schedules")
     public ApiResponse<GetAllScheduleListResponse> getAllSchedules(@AuthenticationPrincipal Long userId){
-        GetAllScheduleListResponse response=readScheduleService.getAllSimpleSchedules(userId);
+        GetAllScheduleListResponse response = readScheduleService.getAllSimpleSchedules(userId);
+        return ApiResponse.of(SuccessStatus._OK, response);
+    }
+
+    @GetMapping("/schedules/invited")
+    public ApiResponse<GetAllInvitedScheduleListResponse> getAllInvitedSchedules(@AuthenticationPrincipal Long userId){
+        GetAllInvitedScheduleListResponse response = readScheduleService.getAllInvitedSchedules(userId);
         return ApiResponse.of(SuccessStatus._OK, response);
     }
 }

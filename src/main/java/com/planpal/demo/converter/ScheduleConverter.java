@@ -35,12 +35,18 @@ public class ScheduleConverter {
                 .title(schedule.getLongTitle())
                 .appointedTime(schedule.getAppointedTime())
                 .place(schedule.getPlace())
-                .scheduleState(schedule.getScheduleState())
                 .build();
     }
 
     public static GetAllScheduleListResponse toSimpleScheduleList(List<GetSimpleScheduleResponse> schedules){
         return GetAllScheduleListResponse.builder()
+                .scheduleCount(schedules.size())
+                .schedules(schedules)
+                .build();
+    }
+
+    public static GetAllInvitedScheduleListResponse toSimpleInvitedScheduleList(List<GetSimpleScheduleResponse> schedules){
+        return GetAllInvitedScheduleListResponse.builder()
                 .scheduleCount(schedules.size())
                 .schedules(schedules)
                 .build();
