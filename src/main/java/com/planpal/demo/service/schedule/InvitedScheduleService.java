@@ -33,7 +33,7 @@ public class InvitedScheduleService {
 
         InvitedSchedule invitedSchedule = invitedScheduleRepository.findByUserIdAndScheduleId(acceptorId, acceptedScheduleId)
                 .orElseThrow(() -> new ScheduleException(ErrorStatus.INVITED_SCHEDULE_NOT_FOUND));
-        deleteInvitedSchedlue(schedule, user, invitedSchedule);
+        deleteInvitedSchedule(schedule, user, invitedSchedule);
 
         AddedSchedule addedSchedule = AddedSchedule.builder()
                 .user(user)
@@ -44,7 +44,21 @@ public class InvitedScheduleService {
         schedule.getAddedSchedules().add(addedSchedule);
     }
 
-    private void deleteInvitedSchedlue(Schedule schedule, User user, InvitedSchedule invitedSchedule){
+    /*
+    * 약속 거절
+    * */
+    public void refuseInvitedSchedule(Long refusedScheduleId, Long refuserId){
+        Schedule schedule = schedulesRepository.findById(refusedScheduleId)
+                .orElseThrow(() -> new ScheduleException(ErrorStatus.SCHEDULE_NOT_FOUND));
+        User user = userRepository.findById(refuserId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+
+        InvitedSchedule invitedSchedule = invitedScheduleRepository.findByUserIdAndScheduleId(refuserId, refusedScheduleId)
+                .orElseThrow(() -> new ScheduleException(ErrorStatus.INVITED_SCHEDULE_NOT_FOUND));
+        deleteInvitedSchedule(schedule, user, invitedSchedule);
+    }
+
+    private void deleteInvitedSchedule(Schedule schedule, User user, InvitedSchedule invitedSchedule){
         schedule.getInvitedSchedules().remove(invitedSchedule);
         user.getInvitedSchedules().remove(invitedSchedule);
         invitedScheduleRepository.delete(invitedSchedule);
