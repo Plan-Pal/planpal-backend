@@ -2,6 +2,7 @@ package com.planpal.demo.service.schedule;
 
 import com.planpal.demo.apipayload.status.ErrorStatus;
 import com.planpal.demo.converter.ScheduleConverter;
+import com.planpal.demo.converter.UserConverter;
 import com.planpal.demo.domain.AddedSchedule;
 import com.planpal.demo.domain.Schedule;
 import com.planpal.demo.exception.ex.ScheduleException;
@@ -10,6 +11,7 @@ import com.planpal.demo.repository.SchedulesRepository;
 import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
 import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
 import com.planpal.demo.web.dto.schedule.GetSimpleScheduleResponse;
+import com.planpal.demo.web.dto.schedule.SimpleUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +37,18 @@ public class ReadScheduleService {
         if (!addedScheduleRepository.existsByUserIdAndScheduleId(userId, scheduleId)){
             throw new ScheduleException(ErrorStatus.UNAUTHORIZED_USER_ACCESS);
         }
-        return ScheduleConverter.toGetScheduleResponse(schedule);
+
+        List<SimpleUserInfo> scheduleUserIdList = getUserIdsByScheduleId(scheduleId);
+
+        return ScheduleConverter.toGetScheduleResponse(schedule, scheduleUserIdList);
+    }
+
+    private List<SimpleUserInfo> getUserIdsByScheduleId(Long scheduleId){
+        List<AddedSchedule> addedSchedules = addedScheduleRepository.findByScheduleId(scheduleId);
+        return addedSchedules.stream()
+                .map(addedSchedule -> addedSchedule.getUser())
+                .map(user -> UserConverter.toSimpleUserInfo(user))
+                .collect(Collectors.toList());
     }
 
     /*

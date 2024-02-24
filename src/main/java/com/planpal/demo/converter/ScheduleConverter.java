@@ -1,10 +1,7 @@
 package com.planpal.demo.converter;
 
 import com.planpal.demo.domain.Schedule;
-import com.planpal.demo.web.dto.schedule.AddScheduleRequest;
-import com.planpal.demo.web.dto.schedule.GetAllScheduleListResponse;
-import com.planpal.demo.web.dto.schedule.GetScheduleResponse;
-import com.planpal.demo.web.dto.schedule.GetSimpleScheduleResponse;
+import com.planpal.demo.web.dto.schedule.*;
 
 import java.util.List;
 
@@ -21,7 +18,7 @@ public class ScheduleConverter {
                 .build();
     }
 
-    public static GetScheduleResponse toGetScheduleResponse(Schedule schedule){
+    public static GetScheduleResponse toGetScheduleResponse(Schedule schedule, List<SimpleUserInfo> scheduleUserIdList){
         return GetScheduleResponse.builder()
                 .shortTitle(schedule.getShortTitle())
                 .longTitle(schedule.getLongTitle())
@@ -29,6 +26,7 @@ public class ScheduleConverter {
                 .appointedTime(schedule.getAppointedTime())
                 .place(schedule.getPlace())
                 .scheduleState(schedule.getScheduleState())
+                .participatingUserList(scheduleUserIdList)
                 .build();
     }
 
