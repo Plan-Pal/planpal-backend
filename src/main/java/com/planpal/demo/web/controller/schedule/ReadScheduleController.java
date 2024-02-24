@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class ScheduleGetController {
+public class ReadScheduleController {
     private final ReadScheduleService readScheduleService;
 
     @GetMapping("/schedules/{scheduleId}")
@@ -25,7 +25,7 @@ public class ScheduleGetController {
 
     @GetMapping("/schedules")
     public ApiResponse<GetAllScheduleListResponse> getAllSchedules(){
-        GetAllScheduleListResponse response=readScheduleService.getAllSimpleScheduls();
+        GetAllScheduleListResponse response=readScheduleService.getAllSimpleSchedules();
         return ApiResponse.of(SuccessStatus._OK, response);
     }
 }

@@ -39,7 +39,7 @@ public class ReadScheduleService {
     /*
      * 간단 일정 전체 조회
      * */
-    public GetAllScheduleListResponse getAllSimpleScheduls(){
+    public GetAllScheduleListResponse getAllSimpleSchedules(){
         List<Schedule> schedules = schedulesRepository.findAll();
         List<GetSimpleScheduleResponse> simpleSchedules=new ArrayList<>();
         for (Schedule schedule : schedules){
