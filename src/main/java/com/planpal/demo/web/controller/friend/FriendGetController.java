@@ -4,7 +4,7 @@ import com.planpal.demo.apipayload.ApiResponse;
 import com.planpal.demo.converter.FriendConverter;
 import com.planpal.demo.converter.UserConverter;
 import com.planpal.demo.service.friend.FriendQueryService;
-import com.planpal.demo.web.dto.UserResponseDto.GetResultDto;
+import com.planpal.demo.web.dto.user.UserResponseDto.GetResultDto;
 import com.planpal.demo.web.dto.friend.FriendResponseDto.GetReceivedFriendRequestDto;
 import com.planpal.demo.web.dto.friend.FriendResponseDto.GetSentFriendRequestDto;
 import lombok.RequiredArgsConstructor;

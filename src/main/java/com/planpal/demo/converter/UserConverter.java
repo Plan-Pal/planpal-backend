@@ -1,21 +1,22 @@
 package com.planpal.demo.converter;
 
 import com.planpal.demo.domain.User;
-import com.planpal.demo.web.dto.UserResponseDto.GetResultDto;
-import com.planpal.demo.web.dto.UserResponseDto.SignUpResultDto;
-import com.planpal.demo.web.dto.kakao.KakaoUserInfoDto;
+import com.planpal.demo.domain.UserRefreshToken;
 import com.planpal.demo.web.dto.schedule.SimpleUserInfo;
+import com.planpal.demo.web.dto.user.UserRequestDto.LoginDto;
+import com.planpal.demo.web.dto.user.UserResponseDto.GetResultDto;
+import com.planpal.demo.web.dto.user.UserResponseDto.LoginResultDto;
 
 public class UserConverter {
-    public static User toUser(KakaoUserInfoDto userInfoDto) {
+    public static User toUser(LoginDto userInfoDto) {
         return User.builder()
-                .kakaoId(userInfoDto.getId())
+                .kakaoId(userInfoDto.getKakaoId())
                 .nickname(userInfoDto.getNickname())
                 .build();
     }
 
-    public static SignUpResultDto toSignUpResultDto(String accessToken) {
-        return new SignUpResultDto(accessToken);
+    public static LoginResultDto toLoginResultDto(String accessToken, String refreshToken) {
+        return new LoginResultDto(accessToken, refreshToken);
     }
 
     public static GetResultDto toGetResultDto(User user) {
@@ -27,5 +28,12 @@ public class UserConverter {
 
     public static SimpleUserInfo toSimpleUserInfo(User user){
         return new SimpleUserInfo(user.getNickname());
+    }
+
+    public static UserRefreshToken toUserRefreshToken(User user, String refreshToken) {
+        return UserRefreshToken.builder()
+                .user(user)
+                .refreshToken(refreshToken)
+                .build();
     }
 }

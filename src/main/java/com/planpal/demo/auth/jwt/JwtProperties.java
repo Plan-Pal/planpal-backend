@@ -10,4 +10,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class JwtProperties {
     private final String secretKey;
     private final Integer accessTokenExpiresIn;
+    private final Integer refreshTokenExpiresIn;
 }
