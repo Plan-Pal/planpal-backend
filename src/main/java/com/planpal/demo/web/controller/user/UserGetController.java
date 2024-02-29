@@ -3,7 +3,7 @@ package com.planpal.demo.web.controller.user;
 import com.planpal.demo.apipayload.ApiResponse;
 import com.planpal.demo.converter.UserConverter;
 import com.planpal.demo.service.user.UserQueryService;
-import com.planpal.demo.web.dto.UserResponseDto.GetResultDto;
+import com.planpal.demo.web.dto.user.UserResponseDto.GetResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

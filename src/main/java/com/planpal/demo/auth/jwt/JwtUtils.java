@@ -25,6 +25,7 @@ import java.util.List;
 public class JwtUtils {
 
     private final static String ACCESS_TYPE = "Access";
+    private final static String REFRESH_TYPE = "Refresh";
     private String base64EncodedSecretKey;
 
     private final JwtProperties jwtProperties;
@@ -37,6 +38,10 @@ public class JwtUtils {
 
     public String generateAccessToken(Long userId) {
         return generateToken(userId, ACCESS_TYPE, jwtProperties.getAccessTokenExpiresIn());
+    }
+
+    public String generateRefreshToken(Long userId) {
+        return generateToken(userId, REFRESH_TYPE, jwtProperties.getRefreshTokenExpiresIn());
     }
 
     public boolean validate(String token) {

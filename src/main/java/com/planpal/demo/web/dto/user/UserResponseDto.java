@@ -1,4 +1,4 @@
-package com.planpal.demo.web.dto;
+package com.planpal.demo.web.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,9 @@ public class UserResponseDto {
 
     @Getter
     @AllArgsConstructor
-    public static class SignUpResultDto {
+    public static class LoginResultDto {
         private String accessToken;
+        private String refreshToken;
     }
 
     @Getter

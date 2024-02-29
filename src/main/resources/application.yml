@@ -19,6 +19,7 @@ spring:
 jwt:
   secret_key: temp
   access_token_expires_in: 7200 # 2hours
+  refresh_token_expires_in: 1209600 # 14days
 
 oauth2:
   kakao:
