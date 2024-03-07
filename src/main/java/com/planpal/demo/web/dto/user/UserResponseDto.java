@@ -7,7 +7,7 @@ public class UserResponseDto {
 
     @Getter
     @AllArgsConstructor
-    public static class LoginResultDto {
+    public static class JwtResponseDto {
         private String accessToken;
         private String refreshToken;
     }

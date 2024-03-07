@@ -11,4 +11,12 @@ public class UserRequestDto {
         private Long kakaoId;
         private String nickname;
     }
+
+    @Getter
+    public static class JwtRequestDto {
+        @NotNull
+        private String accessToken;
+        @NotNull
+        private String refreshToken;
+    }
 }

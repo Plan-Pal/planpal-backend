@@ -1,13 +1,16 @@
 package com.planpal.demo.service.user;
 
+import com.planpal.demo.apipayload.status.ErrorStatus;
 import com.planpal.demo.auth.jwt.JwtUtils;
 import com.planpal.demo.converter.UserConverter;
 import com.planpal.demo.domain.User;
 import com.planpal.demo.domain.UserRefreshToken;
+import com.planpal.demo.exception.ex.UserException;
 import com.planpal.demo.repository.UserRefreshTokenRepository;
 import com.planpal.demo.repository.UserRepository;
+import com.planpal.demo.web.dto.user.UserRequestDto.JwtRequestDto;
 import com.planpal.demo.web.dto.user.UserRequestDto.LoginDto;
-import com.planpal.demo.web.dto.user.UserResponseDto.LoginResultDto;
+import com.planpal.demo.web.dto.user.UserResponseDto.JwtResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,24 +26,39 @@ public class UserCommandService {
     private final UserRepository userRepository;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
-    public LoginResultDto login(LoginDto userInfo) {
-        User user = findUser(userInfo);
+    public JwtResponseDto login(LoginDto userInfo) {
+        User user = getOrCreateUser(userInfo);
 
-        String accessToken = jwtUtils.generateAccessToken(user.getId());
-        String refreshToken = jwtUtils.generateRefreshToken(user.getId());
+        JwtResponseDto newTokenDto = createNewToken(user);
+        saveRefreshToken(user, newTokenDto.getRefreshToken());
 
-        saveRefreshToken(user, refreshToken);
-
-        return UserConverter.toLoginResultDto(accessToken, refreshToken);
+        return newTokenDto;
     }
 
-    private User findUser(LoginDto userInfo) {
+    public JwtResponseDto refresh(JwtRequestDto jwtRequestDto) {
+        User user = getUser(jwtRequestDto);
+        UserRefreshToken userRefreshToken = getUserRefreshToken(jwtRequestDto, user);
+
+        JwtResponseDto newTokenDto = createNewToken(user);
+        userRefreshToken.update(newTokenDto.getRefreshToken());
+
+        return newTokenDto;
+    }
+
+    private User getOrCreateUser(LoginDto userInfo) {
         return userRepository.findByKakaoId(userInfo.getKakaoId())
                 .orElseGet(() -> {
                     User newUser = UserConverter.toUser(userInfo);
                     userRepository.save(newUser);
                     return newUser;
                 });
+    }
+
+    private JwtResponseDto createNewToken(User user) {
+        String accessToken = jwtUtils.generateAccessToken(user.getId());
+        String refreshToken = jwtUtils.generateRefreshToken(user.getId());
+
+        return UserConverter.toJwtResponseDto(accessToken, refreshToken);
     }
 
     private void saveRefreshToken(User user, String refreshToken) {
@@ -52,5 +70,21 @@ public class UserCommandService {
             UserRefreshToken newUserRefreshToken = UserConverter.toUserRefreshToken(user, refreshToken);
             userRefreshTokenRepository.save(newUserRefreshToken);
         }
+    }
+
+    private User getUser(JwtRequestDto jwtRequestDto) {
+        return userRepository.findById((Long) jwtUtils.getAuthentication(jwtRequestDto.getAccessToken()).getPrincipal())
+                .orElseThrow(() -> new UserException(ErrorStatus.TOKEN_INVALID));
+    }
+
+    private UserRefreshToken getUserRefreshToken(JwtRequestDto jwtRequestDto, User user) {
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUser(user)
+                .orElseThrow(() -> new UserException(ErrorStatus.TOKEN_INVALID));
+
+        if (!userRefreshToken.getRefreshToken().equals(jwtRequestDto.getRefreshToken())) {
+            throw new UserException(ErrorStatus.TOKEN_INVALID);
+        }
+
+        return userRefreshToken;
     }
 }
