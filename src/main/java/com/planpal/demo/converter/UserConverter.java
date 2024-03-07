@@ -5,7 +5,7 @@ import com.planpal.demo.domain.UserRefreshToken;
 import com.planpal.demo.web.dto.schedule.SimpleUserInfo;
 import com.planpal.demo.web.dto.user.UserRequestDto.LoginDto;
 import com.planpal.demo.web.dto.user.UserResponseDto.GetResultDto;
-import com.planpal.demo.web.dto.user.UserResponseDto.LoginResultDto;
+import com.planpal.demo.web.dto.user.UserResponseDto.JwtResponseDto;
 
 public class UserConverter {
     public static User toUser(LoginDto userInfoDto) {
@@ -15,8 +15,8 @@ public class UserConverter {
                 .build();
     }
 
-    public static LoginResultDto toLoginResultDto(String accessToken, String refreshToken) {
-        return new LoginResultDto(accessToken, refreshToken);
+    public static JwtResponseDto toJwtResponseDto(String accessToken, String refreshToken) {
+        return new JwtResponseDto(accessToken, refreshToken);
     }
 
     public static GetResultDto toGetResultDto(User user) {
