@@ -29,13 +29,15 @@ public class BearerAuthEntryPoint implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         Object exception = request.getAttribute("exception");
+        String responseBody;
         if (exception instanceof ExpiredJwtException) {
-            response.getWriter().write(createResponseBody(ErrorStatus.TOKEN_EXPIRED));
+            responseBody = createResponseBody(ErrorStatus.TOKEN_EXPIRED);
         }
         else {
-            response.getWriter().write(createResponseBody(ErrorStatus.TOKEN_INVALID));
+            responseBody = createResponseBody(ErrorStatus.TOKEN_INVALID);
         }
 
+        response.getWriter().write(responseBody);
     }
 
     private String createResponseBody(ErrorStatus status) throws JsonProcessingException {

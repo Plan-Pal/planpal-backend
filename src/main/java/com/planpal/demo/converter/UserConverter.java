@@ -24,7 +24,8 @@ public class UserConverter {
         return new GetResultDto(
                 user.getId(),
                 user.getNickname(),
-                user.getTagId());
+                user.getTagId(),
+                user.getIconId());
     }
 
     public static SimpleUserInfo toSimpleUserInfo(User user){

@@ -17,7 +17,8 @@ public class FriendResponseDto {
     @AllArgsConstructor
     public static class GetReceivedFriendRequestDto {
         private Long friendRequestId;
-        private String receiverNickname;
-        private String receiverTagId;
+        private String senderNickname;
+        private String senderTagId;
+        private Integer senderIconId;
     }
 }

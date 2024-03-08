@@ -39,7 +39,7 @@ public class JwtUtils {
     }
 
     public String generateRefreshToken() {
-        return generateToken(0L, REFRESH_TYPE, jwtProperties.getRefreshTokenExpiresIn());
+        return generateToken(null, REFRESH_TYPE, jwtProperties.getRefreshTokenExpiresIn());
     }
 
     public void validate(String token) {
