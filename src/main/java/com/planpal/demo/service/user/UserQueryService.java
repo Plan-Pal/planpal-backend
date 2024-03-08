@@ -19,7 +19,7 @@ public class UserQueryService {
 
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(ErrorStatus.TOKEN_INVALID));
     }
 
     public List<User> getUsersByNickname(String nickname) {

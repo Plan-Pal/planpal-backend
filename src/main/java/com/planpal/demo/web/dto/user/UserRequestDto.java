@@ -9,6 +9,7 @@ public class UserRequestDto {
     public static class LoginDto {
         @NotNull
         private Long kakaoId;
+        @NotNull
         private String nickname;
     }
 

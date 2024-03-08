@@ -26,6 +26,7 @@ public enum ErrorStatus {
 
     // JWT
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "JWT4001", "인증에 실패하였습니다"),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT4002", "토큰이 만료되었습니다"),
 
     // SCHEDULE
     SCHEDULE_NOT_FOUND(HttpStatus.BAD_REQUEST, "SCHEDULE4001", "일정 정보를 찾을 수 없습니다"),
