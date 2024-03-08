@@ -34,6 +34,9 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 10)
     private String nickname;
 
+    @Column(nullable = false)
+    private Integer iconId;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 5)
     private AlarmState alarmState;
@@ -61,6 +64,7 @@ public class User extends BaseEntity {
         this.kakaoId = kakaoId;
         this.nickname = nickname;
         this.tagId = generateRandomTagId();
+        this.iconId = 1;
         this.alarmState = AlarmState.OFF;
         this.userState = UserState.ACTIVE;
     }

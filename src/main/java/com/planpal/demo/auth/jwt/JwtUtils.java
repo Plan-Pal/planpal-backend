@@ -1,7 +1,8 @@
 package com.planpal.demo.auth.jwt;
 
+import com.planpal.demo.apipayload.status.ErrorStatus;
 import com.planpal.demo.domain.User;
-import com.planpal.demo.service.user.UserQueryService;
+import com.planpal.demo.exception.ex.UserException;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class JwtUtils {
     private String base64EncodedSecretKey;
 
     private final JwtProperties jwtProperties;
-    private final UserQueryService userQueryService;
+    private final UserAuthService userAuthService;
 
     @PostConstruct
     public void init() {
@@ -41,21 +42,21 @@ public class JwtUtils {
         return generateToken(0L, REFRESH_TYPE, jwtProperties.getRefreshTokenExpiresIn());
     }
 
-    public boolean validate(String token) {
-        try {
-            Jwts.parser()
-                    .setSigningKey(base64EncodedSecretKey)
-                    .parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public void validate(String token) {
+        Jwts.parser()
+                .setSigningKey(base64EncodedSecretKey)
+                .parseClaimsJws(token);
     }
 
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
         Long userId = claims.get("userId", Long.class);
-        User user = userQueryService.findById(userId);
+
+        if (userId == null) {
+            throw new UserException(ErrorStatus.TOKEN_INVALID);
+        }
+
+        User user = userAuthService.findById(userId);
 
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority("ROLE_USER"));

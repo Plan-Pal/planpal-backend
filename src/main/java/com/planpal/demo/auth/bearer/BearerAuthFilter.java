@@ -20,13 +20,18 @@ public class BearerAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authHeader != null && authHeader.startsWith("Bearer")) {
-            String token = authHeader.replace("Bearer", "").trim();
-            if (jwtUtils.validate(token)) {
+        try {
+            String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            if (authHeader != null && authHeader.startsWith("Bearer")) {
+                String token = authHeader.replace("Bearer", "").trim();
+
+                jwtUtils.validate(token);
+
                 Authentication authentication = jwtUtils.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+        } catch (Exception e) {
+            request.setAttribute("exception", e);
         }
         doFilter(request, response, filterChain);
     }
