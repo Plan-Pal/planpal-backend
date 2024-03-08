@@ -29,17 +29,17 @@ public class UserCommandService {
     public JwtResponseDto login(LoginDto userInfo) {
         User user = getOrCreateUser(userInfo);
 
-        JwtResponseDto newTokenDto = createNewToken(user);
+        JwtResponseDto newTokenDto = createNewToken(user.getId());
         saveRefreshToken(user, newTokenDto.getRefreshToken());
 
         return newTokenDto;
     }
 
     public JwtResponseDto refresh(JwtRequestDto jwtRequestDto) {
-        User user = getUser(jwtRequestDto);
-        UserRefreshToken userRefreshToken = getUserRefreshToken(jwtRequestDto, user);
+        User user = getUser(jwtRequestDto.getAccessToken());
+        UserRefreshToken userRefreshToken = getUserRefreshToken(jwtRequestDto.getRefreshToken(), user);
 
-        JwtResponseDto newTokenDto = createNewToken(user);
+        JwtResponseDto newTokenDto = createNewToken(user.getId());
         userRefreshToken.update(newTokenDto.getRefreshToken());
 
         return newTokenDto;
@@ -54,9 +54,9 @@ public class UserCommandService {
                 });
     }
 
-    private JwtResponseDto createNewToken(User user) {
-        String accessToken = jwtUtils.generateAccessToken(user.getId());
-        String refreshToken = jwtUtils.generateRefreshToken(user.getId());
+    private JwtResponseDto createNewToken(Long userId) {
+        String accessToken = jwtUtils.generateAccessToken(userId);
+        String refreshToken = jwtUtils.generateRefreshToken();
 
         return UserConverter.toJwtResponseDto(accessToken, refreshToken);
     }
@@ -72,16 +72,20 @@ public class UserCommandService {
         }
     }
 
-    private User getUser(JwtRequestDto jwtRequestDto) {
-        return userRepository.findById((Long) jwtUtils.getAuthentication(jwtRequestDto.getAccessToken()).getPrincipal())
+    private User getUser(String accessToken) {
+        return userRepository.findById((Long) jwtUtils.getAuthentication(accessToken).getPrincipal())
                 .orElseThrow(() -> new UserException(ErrorStatus.TOKEN_INVALID));
     }
 
-    private UserRefreshToken getUserRefreshToken(JwtRequestDto jwtRequestDto, User user) {
+    private UserRefreshToken getUserRefreshToken(String refreshToken, User user) {
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUser(user)
                 .orElseThrow(() -> new UserException(ErrorStatus.TOKEN_INVALID));
 
-        if (!userRefreshToken.getRefreshToken().equals(jwtRequestDto.getRefreshToken())) {
+        if (!userRefreshToken.getRefreshToken().equals(refreshToken)) {
+            throw new UserException(ErrorStatus.TOKEN_INVALID);
+        }
+
+        if (!jwtUtils.validate(refreshToken)) {
             throw new UserException(ErrorStatus.TOKEN_INVALID);
         }
 

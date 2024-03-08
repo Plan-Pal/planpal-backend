@@ -2,10 +2,7 @@ package com.planpal.demo.auth.jwt;
 
 import com.planpal.demo.domain.User;
 import com.planpal.demo.service.user.UserQueryService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,8 +37,8 @@ public class JwtUtils {
         return generateToken(userId, ACCESS_TYPE, jwtProperties.getAccessTokenExpiresIn());
     }
 
-    public String generateRefreshToken(Long userId) {
-        return generateToken(userId, REFRESH_TYPE, jwtProperties.getRefreshTokenExpiresIn());
+    public String generateRefreshToken() {
+        return generateToken(0L, REFRESH_TYPE, jwtProperties.getRefreshTokenExpiresIn());
     }
 
     public boolean validate(String token) {
@@ -67,16 +64,20 @@ public class JwtUtils {
 
     private String generateToken(Long userId, String type, Integer tokenExpiresIn) {
         long current = System.currentTimeMillis();
-        return Jwts.builder()
+        JwtBuilder jwtBuilder = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuedAt(new Date(current))
                 .setSubject(type)
                 .setExpiration(new Date(
                         current + tokenExpiresIn * 1000
                 ))
-                .claim("userId", userId)
-                .signWith(SignatureAlgorithm.HS256, base64EncodedSecretKey)
-                .compact();
+                .signWith(SignatureAlgorithm.HS256, base64EncodedSecretKey);
+
+        if (type.equals(ACCESS_TYPE)){
+            jwtBuilder.claim("userId", userId);
+        }
+
+        return jwtBuilder.compact();
     }
 
     private Claims getClaims(String token) {
