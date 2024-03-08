@@ -18,6 +18,7 @@ public class UserResponseDto {
         private Long userId;
         private String nickname;
         private String tagId;
+        private Integer iconId;
     }
 
     @Getter
