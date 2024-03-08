@@ -4,6 +4,7 @@ import com.planpal.demo.domain.User;
 import com.planpal.demo.domain.UserRefreshToken;
 import com.planpal.demo.web.dto.schedule.SimpleUserInfo;
 import com.planpal.demo.web.dto.user.UserRequestDto.LoginDto;
+import com.planpal.demo.web.dto.user.UserResponseDto.GetProfileDto;
 import com.planpal.demo.web.dto.user.UserResponseDto.GetResultDto;
 import com.planpal.demo.web.dto.user.UserResponseDto.JwtResponseDto;
 
@@ -35,5 +36,9 @@ public class UserConverter {
                 .user(user)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    public static GetProfileDto toGetProfileDto(User user) {
+        return new GetProfileDto(user.getNickname(), user.getTagId(), user.getIconId());
     }
 }

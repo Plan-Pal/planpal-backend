@@ -19,4 +19,12 @@ public class UserResponseDto {
         private String nickname;
         private String tagId;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class GetProfileDto {
+        private String nickname;
+        private String tagId;
+        private Integer iconId;
+    }
 }

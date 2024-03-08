@@ -85,7 +85,9 @@ public class UserCommandService {
             throw new UserException(ErrorStatus.TOKEN_INVALID);
         }
 
-        if (!jwtUtils.validate(refreshToken)) {
+        try {
+            jwtUtils.validate(refreshToken);
+        } catch (Exception e) {
             throw new UserException(ErrorStatus.TOKEN_INVALID);
         }
 

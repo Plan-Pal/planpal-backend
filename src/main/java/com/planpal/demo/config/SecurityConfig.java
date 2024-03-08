@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/users/profile").authenticated()
                         .requestMatchers("/friends/**").authenticated()
                         .requestMatchers("/schedules/**").authenticated()
                         .anyRequest().permitAll())
