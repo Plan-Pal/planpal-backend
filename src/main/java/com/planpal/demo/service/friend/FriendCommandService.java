@@ -48,7 +48,7 @@ public class FriendCommandService {
         friendRequestRepository.delete(friendRequest);
     }
 
-    public void acceptFriendRequest(Long userId, RequestDto requestDto) {
+    public User acceptFriendRequest(Long userId, RequestDto requestDto) {
         User receiver = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
@@ -59,6 +59,8 @@ public class FriendCommandService {
 
         friendRequestRepository.delete(friendRequest);
         friendRepository.save(friend);
+
+        return friendRequest.getSender();
     }
 
     public void deleteFriend(Long userId, FriendDto friendDto) {

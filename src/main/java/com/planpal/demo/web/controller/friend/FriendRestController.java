@@ -1,9 +1,12 @@
 package com.planpal.demo.web.controller.friend;
 
 import com.planpal.demo.apipayload.ApiResponse;
+import com.planpal.demo.converter.UserConverter;
+import com.planpal.demo.domain.User;
 import com.planpal.demo.service.friend.FriendCommandService;
 import com.planpal.demo.web.dto.friend.FriendRequestDto.FriendDto;
 import com.planpal.demo.web.dto.friend.FriendRequestDto.RequestDto;
+import com.planpal.demo.web.dto.user.UserResponseDto.GetResultDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,10 +35,10 @@ public class FriendRestController {
     }
 
     @PostMapping
-    public ApiResponse<Void> acceptFriendRequest(@AuthenticationPrincipal Long userId,
-                                                 @RequestBody @Valid RequestDto requestDto) {
-        friendCommandService.acceptFriendRequest(userId, requestDto);
-        return ApiResponse.onSuccess(null);
+    public ApiResponse<GetResultDto> acceptFriendRequest(@AuthenticationPrincipal Long userId,
+                                                         @RequestBody @Valid RequestDto requestDto) {
+        User newFriend = friendCommandService.acceptFriendRequest(userId, requestDto);
+        return ApiResponse.onSuccess(UserConverter.toGetResultDto(newFriend));
     }
 
     @DeleteMapping
