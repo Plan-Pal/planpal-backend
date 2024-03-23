@@ -5,6 +5,7 @@ import com.planpal.demo.domain.enums.AlarmState;
 import com.planpal.demo.domain.enums.UserState;
 import com.planpal.demo.domain.mapping.Friend;
 import com.planpal.demo.domain.mapping.FriendRequest;
+import com.planpal.demo.web.dto.user.UserRequestDto.UpdateDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,9 +13,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -78,4 +79,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<InvitedSchedule> invitedSchedules=new ArrayList<>();
+
+    public void update(UpdateDto updateDto) {
+        this.iconId = updateDto.getIconId();
+        this.nickname = updateDto.getNickname();
+    }
 }
