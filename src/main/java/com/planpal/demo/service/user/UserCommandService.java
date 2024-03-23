@@ -10,6 +10,7 @@ import com.planpal.demo.repository.UserRefreshTokenRepository;
 import com.planpal.demo.repository.UserRepository;
 import com.planpal.demo.web.dto.user.UserRequestDto.JwtRequestDto;
 import com.planpal.demo.web.dto.user.UserRequestDto.LoginDto;
+import com.planpal.demo.web.dto.user.UserRequestDto.UpdateDto;
 import com.planpal.demo.web.dto.user.UserResponseDto.JwtResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,12 @@ public class UserCommandService {
         userRefreshToken.update(newTokenDto.getRefreshToken());
 
         return newTokenDto;
+    }
+
+    public void update(Long userId, UpdateDto updateDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+        user.update(updateDto);
     }
 
     private User getOrCreateUser(LoginDto userInfo) {
