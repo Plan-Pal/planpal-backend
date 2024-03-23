@@ -11,7 +11,7 @@ public class FriendResponseDto {
         private Long friendRequestId;
         private String receiverNickname;
         private String receiverTagId;
-        private String receiverIconId;
+        private Integer receiverIconId;
     }
 
     @Getter

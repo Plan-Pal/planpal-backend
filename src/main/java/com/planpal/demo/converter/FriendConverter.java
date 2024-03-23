@@ -20,7 +20,8 @@ public class FriendConverter {
         return new GetSentFriendRequestDto(
                 request.getId(),
                 request.getReceiver().getNickname(),
-                request.getReceiver().getTagId()
+                request.getReceiver().getTagId(),
+                request.getReceiver().getIconId()
         );
     }
 
