@@ -59,8 +59,10 @@ public class InvitedScheduleService {
     }
 
     private void deleteInvitedSchedule(Schedule schedule, User user, InvitedSchedule invitedSchedule){
-        schedule.getInvitedSchedules().remove(invitedSchedule);
-        user.getInvitedSchedules().remove(invitedSchedule);
-        invitedScheduleRepository.delete(invitedSchedule);
+        InvitedSchedule persistentInvitedSchedule = invitedScheduleRepository.findById(invitedSchedule.getId())
+                .orElseThrow(() -> new ScheduleException(ErrorStatus.INVITED_SCHEDULE_NOT_FOUND));
+        schedule.getInvitedSchedules().remove(persistentInvitedSchedule);
+        user.getInvitedSchedules().remove(persistentInvitedSchedule);
+        invitedScheduleRepository.delete(persistentInvitedSchedule);
     }
 }

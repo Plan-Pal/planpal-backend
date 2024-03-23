@@ -32,6 +32,7 @@ public class ScheduleConverter {
 
     public static GetSimpleScheduleResponse toSimpleSchedule(Schedule schedule){
         return GetSimpleScheduleResponse.builder()
+                .scheduleId(schedule.getId())
                 .shortTitle(schedule.getShortTitle())
                 .title(schedule.getLongTitle())
                 .appointedTime(schedule.getAppointedTime())
