@@ -84,9 +84,11 @@ public class FriendCommandService {
     }
 
     private void validateNewRequest(User sender, User receiver) {
-        boolean alreadyExists = friendRequestRepository.existsBySenderAndReceiver(sender, receiver);
-        if (alreadyExists) {
+        if (friendRequestRepository.existsBySenderAndReceiver(sender, receiver)) {
             throw new FriendException(ErrorStatus.FRIEND_REQUEST_ALREADY_EXISTS);
+        }
+        if (friendRequestRepository.existsBySenderAndReceiver(receiver, sender)) {
+            throw new FriendException(ErrorStatus.RECEIVED_FRIEND_REQUEST_ALREADY_EXISTS);
         }
     }
 
